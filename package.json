@@ -19,7 +19,7 @@
     "js-yaml": "x",
     "require-all": "x",
     "moment": "x",
-    "useful-copy": "x"
+    "useful-value": "x"
   },
   "devDependencies": {
     "assert": "*",
