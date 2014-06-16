@@ -1,0 +1,12 @@
+app:
+  port: 3000
+  global_request_timeout: 5000
+log:
+  customlevels:
+    ERROR: 1
+    INFO: 1
+    LOG: 1
+    WARN: 1
+apis:
+  base: "/apis"
+  health: "/service/healthcheck"

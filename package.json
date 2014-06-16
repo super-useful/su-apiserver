@@ -1,0 +1,50 @@
+{
+  "name": "su-apiserver",
+  "version": "0.0.0",
+  "description": "koa api initialisation and web server",
+  "dependencies": {
+    "koa": "x",
+    "koa-mount": "x",
+    "koa-router": "x",
+    "super-is": "x",
+    "super-iter": "x",
+    "super-func": "x",
+    "super-base": "x",
+    "JSONStream": "x",
+    "request": "x",
+    "event-stream": "x",
+    "through": "x",
+    "config": "x",
+    "yaml": "x",
+    "js-yaml": "x",
+    "require-all": "x",
+    "moment": "x",
+    "useful-copy": "x"
+  },
+  "devDependencies": {
+    "assert": "*",
+    "should": "*",
+    "mocha": "*",
+    "chai": "*",
+    "sinon": "*",
+    "sinon-chai": "*",
+    "rewire": "2.0.x"
+  },
+  "main": "index.js",
+  "author": {
+    "Simon Jefford": "si@ibrokethat.com",
+    "Christos Constandinou": "constantology@gmail.com"
+    },
+  "license":[ {
+    "type": "MIT",
+    "url": "https://raw.github.com/super-useful/su-apiserver/master/LICENSE"
+  }],
+  "scripts": {
+    "test": "make test",
+    "start": "node --harmony index.js"
+  },
+  "engines": {
+    "node": "0.11.x"
+  }
+
+}
