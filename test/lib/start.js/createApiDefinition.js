@@ -50,7 +50,7 @@ describe('lib/start/createApiDefinition', function() {
         function * () {}
       ],
       query: function * () {},
-      pipeline: [
+      streams: [
         function () {return new Stream},
         function () {return new Stream}
       ]
@@ -137,7 +137,22 @@ describe('lib/start/createApiDefinition', function() {
   });
 
 
-  it('should enforce that the api pipeline consists of functions that return a Stream', function() {
+  it('should enforce that the api streaming pipeline consists of functions that return a Stream', function() {
+
+    api.streams = [
+      function () {return {};},
+      function () {return {};}
+    ];
+
+    expect(function () {
+      createApiDefinition(name, pathName, path, api);
+    }).to.throw(TypeError);
+
+  });
+
+
+  it('should enforce that the api pipeline consists of functions', function() {
+    delete api.streams;
 
     api.pipeline = [
       function () {return {};},
@@ -146,7 +161,21 @@ describe('lib/start/createApiDefinition', function() {
 
     expect(function () {
       createApiDefinition(name, pathName, path, api);
-    }).to.throw(TypeError);
+    }).to.not.throw(Error);
+
+  });
+
+
+  it('should enforce that the api can not contain both a streaming pipeline and function pipeline for the same definition', function() {
+
+    api.pipeline = [
+      function () {return {};},
+      function () {return {};}
+    ];
+
+    expect(function () {
+      createApiDefinition(name, pathName, path, api);
+    }).to.throw(Error);
 
   });
 
