@@ -8,6 +8,7 @@ var CONF = require('config');
 var koa = require('koa');
 var mount = require('koa-mount');
 var Router = require('koa-router');
+var bodyParser = require('koa-body-parser');
 
 
 var apiDescriptor = require('./lib/start/apiDescriptor');
@@ -19,6 +20,7 @@ var routers = require('./lib/utils/routers');
 
 var app = koa();
 
+app.use(bodyParser());
 app.use(Router());
 
 module.exports = function(versions) {
