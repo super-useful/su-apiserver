@@ -5,6 +5,7 @@
   "dependencies": {
     "koa": "x",
     "koa-body-parser": "x",
+    "koa-compose": "x",
     "koa-mount": "x",
     "koa-router": "x",
     "super-is": "x",
