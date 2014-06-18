@@ -9,7 +9,6 @@ var koa = require('koa');
 var mount = require('koa-mount');
 var Router = require('koa-router');
 
-
 var apiDescriptor = require('./lib/start/apiDescriptor');
 var createApiDefinition = require('./lib/start/createApiDefinition');
 var getRequestDefinition = require('./lib/start/getRequestDefinition');
