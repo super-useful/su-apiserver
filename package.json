@@ -36,11 +36,15 @@
   "author": {
     "Simon Jefford": "si@ibrokethat.com",
     "Christos Constandinou": "constantology@gmail.com"
-    },
+  },
   "license":[ {
     "type": "MIT",
     "url": "https://raw.github.com/super-useful/su-apiserver/master/LICENSE"
   }],
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:super-useful/su-apiserver.git"
+	},
   "scripts": {
     "test": "make test",
     "start": "node --harmony index.js"
