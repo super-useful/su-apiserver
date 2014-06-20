@@ -3,6 +3,7 @@
 var path = require('path');
 var iter = require('super-iter');
 var forEach = iter.forEach;
+var some = iter.some;
 
 var CONF = require('config');
 var koa = require('koa');
@@ -18,7 +19,17 @@ var routers = require('./lib/utils/routers');
 
 var app = koa();
 
-app.use(Router());
+app.use(Router(app));
+
+//app.all( '/', function* () {
+//  if ( some( CONF.apis, function( api_path, id ) {
+//    return !!( this.url.indexOf( api_path ) > 0 );
+//  }, this.req ) ) {
+//    return;
+//  }
+//
+//  console.log( 'NOT API: ', this.req.url );
+//} );
 
 module.exports = function(versions) {
 	try {
