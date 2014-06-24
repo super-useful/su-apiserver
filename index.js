@@ -21,10 +21,22 @@ var app = koa();
 
 app.use(Router());
 
+//app.all( '/', function* () {
+//  if ( some( CONF.apis, function( api_path, id ) {
+//    return !!( this.url.indexOf( api_path ) > 0 );
+//  }, this.req ) ) {
+//    return;
+//  }
+//
+//  console.log( 'NOT API: ', this.req.url );
+//} );
+
 module.exports = function(versions) {
 	try {
 
 	  //  load all the apis
+//	  var versions = require('require-all')(path.join(process.cwd(), 'apis'));
+
 	  //  apis are specced by version - process each one
 	  forEach(versions, function (apis, version) {
 
@@ -96,7 +108,7 @@ module.exports = function(versions) {
 	  var versionRouter = new Router();
 
 	  versionRouter.get('/:version', function * () {
-		  this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
+		this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
 	  });
 	  app.use(mount(CONF.apis.base, versionRouter.middleware()));
 
@@ -105,7 +117,7 @@ module.exports = function(versions) {
 	  var healthRouter = new Router();
 
 	  healthRouter.get('/', function * () {
-		  this.body = JSON.stringify(apiDescriptor.stable, null, 2);
+		this.body = JSON.stringify(apiDescriptor.stable, null, 2);
 	  });
 	  app.use(mount(CONF.apis.health, healthRouter.middleware()));
 
