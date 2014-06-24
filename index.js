@@ -19,7 +19,7 @@ var routers = require('./lib/utils/routers');
 
 var app = koa();
 
-app.use(Router(app));
+app.use(Router());
 
 //app.all( '/', function* () {
 //  if ( some( CONF.apis, function( api_path, id ) {
