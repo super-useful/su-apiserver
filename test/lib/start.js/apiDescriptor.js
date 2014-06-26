@@ -56,7 +56,7 @@ describe('lib/start/apiDescriptor', function() {
 
       apiDescriptor.initialiseVersion(version);
 
-      expect(apiDescriptor.versions.v1 instanceof Array).to.be.true;
+      expect(apiDescriptor.versions.v1).to.be.instanceof(Array);
 
     });
 

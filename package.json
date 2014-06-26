@@ -24,6 +24,7 @@
     "useful-value": "x"
   },
   "devDependencies": {
+    "co": "x",
     "assert": "*",
     "should": "*",
     "mocha": "*",

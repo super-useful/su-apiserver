@@ -111,7 +111,7 @@ describe('lib/commands/pipe', function() {
   });
 
 
-  it('should should still work if the first parameter is a stream as opposed function that returns a stream', function(done) {
+  it('should should still work if the first parameter is a stream as oppose to a function that returns a stream', function(done) {
 
     streams[0] = readMaker();
 

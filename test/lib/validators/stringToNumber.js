@@ -38,7 +38,7 @@ describe('lib/validators/stringToNumber', function() {
 
   });
 
-  it('should return the converted numner if it passes the validation check', function() {
+  it('should return the converted number if it passes the validation check', function() {
 
     expect(stringToNumber('3')).to.be.equal(3);
 
