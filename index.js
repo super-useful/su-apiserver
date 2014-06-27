@@ -32,6 +32,12 @@ app.use(Router());
 //} );
 
 module.exports = function(versions) {
+  var koa_modules = Array.prototype.slice.call(arguments, 1);
+
+  forEach(koa_modules, function(mod) {
+    app.use(mod);
+  });
+
 	try {
 
 	  //  load all the apis
