@@ -14,6 +14,8 @@ var createApiVersion = require('./lib/start/createApiVersion');
 
 var routers = require('./lib/utils/routers');
 
+require('./lib/start/logger');
+
 var app = koa();
 
 app.use(Router());
