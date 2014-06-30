@@ -23,7 +23,7 @@ var app = koa();
 
 app.use(Router());
 
-module.exports = co(function* (versions) {
+module.exports = function* (versions) {
   var koa_modules = Array.prototype.slice.call(arguments, 1);
 
   forEach(koa_modules, function(mod) {
@@ -32,29 +32,28 @@ module.exports = co(function* (versions) {
 
 	try {
 	  //  apis are specced by version - process each one
-	  forEach(versions, function (apis, version) {
+	  forEach(versions, co(function* (apis, version) {
 
 		//  each version of the api get it's own router
 		var router = new Router();
+		var apiApp = {};
 
 		// if there is application functionality specific to this API version, then smoke it up...
-		var apiApp = typeof apis.app === 'function'
-		           ? yield apis.app()
-		           : {};
+		apiApp = yield apis.app();
 
 		//  and space to store it's descriptor
 		apiDescriptor.initialiseVersion(version);
 
 		//  each api has a definition folder
-		forEach(apis.definitions, function (apiDefinition, name) {
+		forEach(apis.definitions, co(function* (apiDefinition, name) {
 
 		  //  where each file contains at least one definition of an api
-		  forEach(apiDefinition, function (api) {
+		  forEach(apiDefinition, co(function* (api) {
 
 			var method = api.method.toLowerCase();
 
 			//  each api can have more than one set of paths
-			forEach(api.paths, function (path, pathName) {
+			forEach(api.paths, co(function* (path, pathName) {
 
 			  //  create and load the api into the router
 			  var apiArguments = createApiDefinition(name, pathName, path, api, apiApp);
@@ -71,10 +70,10 @@ module.exports = co(function* (versions) {
 			  //  create the descriptor
 			  apiDescriptor.create(apiName, api, apiUrl, version, requestDefinition);
 
-			});
-		  });
+			}));
+		  }));
 
-		});
+		}));
 
 		//  extract, mount, and register the router middleware
 		var middleware = router.middleware();
@@ -99,9 +98,7 @@ module.exports = co(function* (versions) {
 		  }
 		});
 
-	  });
-
-
+	  }));
 
 	  //  create a new router for the api descriptor and mount it
 	  var versionRouter = new Router();
@@ -110,7 +107,6 @@ module.exports = co(function* (versions) {
 		this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
 	  });
 	  app.use(mount(CONF.apis.base, versionRouter.middleware()));
-
 
 	  //  add the health check
 	  var healthRouter = new Router();
@@ -130,4 +126,4 @@ module.exports = co(function* (versions) {
 	}
 
 	return app;
-})();
+};
