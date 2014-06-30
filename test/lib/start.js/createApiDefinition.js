@@ -17,6 +17,7 @@ var name;
 var pathName;
 var path;
 var api;
+var apiApp;
 var bindVersion;
 var lb;
 var lbRequest;
@@ -43,6 +44,7 @@ describe('lib/start/createApiDefinition', function() {
       request: Base.extend({})
     }
 
+    apiApp = {};
     api = {
       type: 'json',
       interceptors: [
@@ -75,17 +77,17 @@ describe('lib/start/createApiDefinition', function() {
 
   it('should return an array containing values and functions that describe a controller pipeline', function() {
 
-    var definition = createApiDefinition(name, pathName, path, api);
+    var definition = createApiDefinition(name, pathName, path, api, apiApp);
 
     expect(definition[0]).to.be.equal(name + '-' + pathName);
     expect(definition[1]).to.be.equal('/' + name + path.params);
     expect(definition[2]).to.be.equal(lbRequest);
-    expect(definition[3]).to.be.equal(bindVersion);
+    expect(definition[3]).to.be.equal(lbController);
     expect(definition[4]).to.be.equal(path.interceptors[0]);
     expect(definition[5]).to.be.equal(path.interceptors[1]);
     expect(definition[6]).to.be.equal(api.interceptors[0]);
     expect(definition[7]).to.be.equal(api.interceptors[1]);
-    expect(definition[8]).to.be.equal(lbController);
+//    expect(definition[8]).to.be.equal(lbController);
   });
 
 

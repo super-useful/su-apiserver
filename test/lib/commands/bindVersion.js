@@ -20,6 +20,7 @@ var ctxError;
 
 var modulePath = 'lib/commands/bindVersion';
 var routers;
+var appApi;
 
 chai.use(sinonChai);
 
@@ -29,6 +30,7 @@ describe(modulePath, function() {
 
     underTest = rewire(path.resolve(modulePath));
     fakes = sinon.sandbox.create();
+    appApi = {};
     next = function * () {};
 
     ctxSuccess = {
@@ -57,7 +59,7 @@ describe(modulePath, function() {
 
     co(function * () {
 
-      yield underTest.call(ctxError, next);
+      yield underTest.call(ctxError, appApi, next);
 
       expect(ctxError.e).to.be.instanceof(InternalServerError);
 
@@ -69,7 +71,7 @@ describe(modulePath, function() {
 
     co(function * () {
 
-      yield underTest.call(ctxSuccess, next);
+      yield underTest.call(ctxSuccess, appApi, next);
 
       expect(ctxSuccess.v.version).to.be.equal('0.0.0');
 
@@ -82,7 +84,7 @@ describe(modulePath, function() {
 
     co(function * () {
 
-      yield underTest.call(ctxSuccess, next);
+      yield underTest.call(ctxSuccess, appApi, next);
 
       expect(routers.getActive).to.have.been.calledWith('0.0.0');
       expect(ctxSuccess.v.router).to.be.equal(10);

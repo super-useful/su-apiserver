@@ -6,6 +6,8 @@ var forEach = iter.forEach;
 var some = iter.some;
 
 var CONF = require('config');
+
+var co = require('co');
 var koa = require('koa');
 var mount = require('koa-mount');
 var Router = require('koa-router');
@@ -21,17 +23,7 @@ var app = koa();
 
 app.use(Router());
 
-//app.all( '/', function* () {
-//  if ( some( CONF.apis, function( api_path, id ) {
-//    return !!( this.url.indexOf( api_path ) > 0 );
-//  }, this.req ) ) {
-//    return;
-//  }
-//
-//  console.log( 'NOT API: ', this.req.url );
-//} );
-
-module.exports = function(versions) {
+module.exports = co(function* (versions) {
   var koa_modules = Array.prototype.slice.call(arguments, 1);
 
   forEach(koa_modules, function(mod) {
@@ -39,15 +31,16 @@ module.exports = function(versions) {
   });
 
 	try {
-
-	  //  load all the apis
-//	  var versions = require('require-all')(path.join(process.cwd(), 'apis'));
-
 	  //  apis are specced by version - process each one
 	  forEach(versions, function (apis, version) {
 
 		//  each version of the api get it's own router
 		var router = new Router();
+
+		// if there is application functionality specific to this API version, then smoke it up...
+		var apiApp = typeof apis.app === 'function'
+		           ? yield apis.app()
+		           : {};
 
 		//  and space to store it's descriptor
 		apiDescriptor.initialiseVersion(version);
@@ -64,7 +57,7 @@ module.exports = function(versions) {
 			forEach(api.paths, function (path, pathName) {
 
 			  //  create and load the api into the router
-			  var apiArguments = createApiDefinition(name, pathName, path, api);
+			  var apiArguments = createApiDefinition(name, pathName, path, api, apiApp);
 			  router[method].apply(router, apiArguments);
 
 			  //  extract the params from the defined route
@@ -127,7 +120,6 @@ module.exports = function(versions) {
 	  });
 	  app.use(mount(CONF.apis.health, healthRouter.middleware()));
 
-
 	  //  listen on port
 	  app.listen(CONF.app.port);
 
@@ -138,4 +130,4 @@ module.exports = function(versions) {
 	}
 
 	return app;
-};
+})();

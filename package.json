@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "koa api initialisation and web server",
   "dependencies": {
+    "co": "x",
     "koa": "x",
     "koa-body-parser": "x",
     "koa-compose": "x",
@@ -21,10 +22,10 @@
     "js-yaml": "x",
     "require-all": "x",
     "moment": "x",
+    "useful-copy": "x",
     "useful-value": "x"
   },
   "devDependencies": {
-    "co": "x",
     "assert": "*",
     "should": "*",
     "mocha": "*",
