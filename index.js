@@ -21,90 +21,79 @@ var app = koa();
 
 app.use(Router());
 
-//app.all( '/', function* () {
-//  if ( some( CONF.apis, function( api_path, id ) {
-//    return !!( this.url.indexOf( api_path ) > 0 );
-//  }, this.req ) ) {
-//    return;
-//  }
-//
-//  console.log( 'NOT API: ', this.req.url );
-//} );
-
 module.exports = function(versions) {
-  var koa_modules = Array.prototype.slice.call(arguments, 1);
 
-  forEach(koa_modules, function(mod) {
+  var koaModules = Array.prototype.slice.call(arguments, 1);
+
+  forEach(koaModules, function(mod) {
     app.use(mod);
   });
 
 	try {
 
-	  //  load all the apis
-//	  var versions = require('require-all')(path.join(process.cwd(), 'apis'));
-
 	  //  apis are specced by version - process each one
 	  forEach(versions, function (apis, version) {
 
-		//  each version of the api get it's own router
-		var router = new Router();
+  		//  each version of the api get it's own router
+  		var router = new Router();
 
-		//  and space to store it's descriptor
-		apiDescriptor.initialiseVersion(version);
+  		//  and space to store it's descriptor
+  		apiDescriptor.initialiseVersion(version);
 
-		//  each api has a definition folder
-		forEach(apis.definitions, function (apiDefinition, name) {
+  		//  each api has a definition folder
+  		forEach(apis.definitions, function (apiDefinition, name) {
 
-		  //  where each file contains at least one definition of an api
-		  forEach(apiDefinition, function (api) {
+  		  //  where each file contains at least one definition of an api
+  		  forEach(apiDefinition, function (api) {
 
-			var method = api.method.toLowerCase();
+    			var method = api.method.toLowerCase();
 
-			//  each api can have more than one set of paths
-			forEach(api.paths, function (path, pathName) {
+    			//  each api can have more than one set of paths
+    			forEach(api.paths, function (path, pathName) {
 
-			  //  create and load the api into the router
-			  var apiArguments = createApiDefinition(name, pathName, path, api);
-			  router[method].apply(router, apiArguments);
+    			  //  create and load the api into the router
+    			  var apiArguments = createApiDefinition(name, pathName, path, api);
+    			  router[method].apply(router, apiArguments);
 
-			  //  extract the params from the defined route
-			  var apiName = apiArguments[0];
-			  var apiUrl = apiArguments[1];
-			  var params = router.route(apiName).params;
+    			  //  extract the params from the defined route
+    			  var apiName = apiArguments[0];
+    			  var apiUrl = apiArguments[1];
+    			  var params = router.route(apiName).params;
 
-			  //  get the public facing request params and query
-			  var requestDefinition = getRequestDefinition(path.request, params);
+    			  //  get the public facing request params and query
+    			  var requestDefinition = getRequestDefinition(path.request, params);
 
-			  //  create the descriptor
-			  apiDescriptor.create(apiName, api, apiUrl, version, requestDefinition);
+    			  //  create the descriptor
+    			  apiDescriptor.create(apiName, api, apiUrl, version, requestDefinition);
 
-			});
-		  });
+    			});
 
-		});
+  		  });
 
-		//  extract, mount, and register the router middleware
-		var middleware = router.middleware();
+  		});
 
-		app.use(mount(CONF.apis.base + '/' + version, middleware));
+  		//  extract, mount, and register the router middleware
+  		var middleware = router.middleware();
 
-		routers.register(version, router);
+  		app.use(mount(CONF.apis.base + '/' + version, middleware));
 
-		//  does the current version match a release candidate
-		forEach(CONF.apis.releases, function (releaseVersion, releaseName) {
+  		routers.register(version, router);
 
-		  if (version === releaseVersion) {
+  		//  does the current version match a release candidate
+  		forEach(CONF.apis.releases, function (releaseVersion, releaseName) {
 
-			//  create the release version of the descriptor
-			apiDescriptor.createReleaseVersion(version, releaseName);
+  		  if (version === releaseVersion) {
 
-			//  mount and register the release version of the api
-			app.use(mount(CONF.apis.base + '/' + releaseName, middleware));
+    			//  create the release version of the descriptor
+    			apiDescriptor.createReleaseVersion(version, releaseName);
 
-			routers.register(releaseName, router);
+    			//  mount and register the release version of the api
+    			app.use(mount(CONF.apis.base + '/' + releaseName, middleware));
 
-		  }
-		});
+    			routers.register(releaseName, router);
+
+  		  }
+  		});
 
 	  });
 
@@ -114,8 +103,10 @@ module.exports = function(versions) {
 	  var versionRouter = new Router();
 
 	  versionRouter.get('/:version', function * () {
-		this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
+
+		  this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
 	  });
+
 	  app.use(mount(CONF.apis.base, versionRouter.middleware()));
 
 
@@ -123,8 +114,10 @@ module.exports = function(versions) {
 	  var healthRouter = new Router();
 
 	  healthRouter.get('/', function * () {
-		this.body = JSON.stringify(apiDescriptor.stable, null, 2);
+
+		  this.body = JSON.stringify(apiDescriptor.stable, null, 2);
 	  });
+
 	  app.use(mount(CONF.apis.health, healthRouter.middleware()));
 
 

@@ -20,7 +20,7 @@
     "yaml": "x",
     "js-yaml": "x",
     "require-all": "x",
-    "moment": "x",
+    "moment-timezone": "x",
     "useful-value": "x"
   },
   "devDependencies": {
