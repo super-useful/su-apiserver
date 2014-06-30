@@ -1,21 +1,16 @@
 'use strict';
 
-var path = require('path');
 var iter = require('super-iter');
 var forEach = iter.forEach;
-var some = iter.some;
 
 var CONF = require('config');
 
-var co = require('co');
 var koa = require('koa');
 var mount = require('koa-mount');
 var Router = require('koa-router');
 
 var apiDescriptor = require('./lib/start/apiDescriptor');
-var createApiDefinition = require('./lib/start/createApiDefinition');
-var getRequestDefinition = require('./lib/start/getRequestDefinition');
-var logger = require('./lib/start/logger');
+var createApiVersion = require('./lib/start/createApiVersion');
 
 var routers = require('./lib/utils/routers');
 
@@ -30,81 +25,23 @@ module.exports = function* (versions) {
     app.use(mod);
   });
 
+  var versionApi, versionNumber;
+
+	//  apis are specced by version - process each one
+  for (versionNumber in versions) {
+    if (Object.prototype.hasOwnProperty.call(versions, versionNumber)) {
+      versionApi = versions[versionNumber];
+
+      yield createApiVersion(app, routers, versionApi, versionNumber);
+    }
+  }
+
 	try {
-	  //  apis are specced by version - process each one
-	  forEach(versions, co(function* (apis, version) {
-
-		//  each version of the api get it's own router
-		var router = new Router();
-		var apiApp = {};
-
-		// if there is application functionality specific to this API version, then smoke it up...
-		apiApp = yield apis.app();
-
-		//  and space to store it's descriptor
-		apiDescriptor.initialiseVersion(version);
-
-		//  each api has a definition folder
-		forEach(apis.definitions, co(function* (apiDefinition, name) {
-
-		  //  where each file contains at least one definition of an api
-		  forEach(apiDefinition, co(function* (api) {
-
-			var method = api.method.toLowerCase();
-
-			//  each api can have more than one set of paths
-			forEach(api.paths, co(function* (path, pathName) {
-
-			  //  create and load the api into the router
-			  var apiArguments = createApiDefinition(name, pathName, path, api, apiApp);
-			  router[method].apply(router, apiArguments);
-
-			  //  extract the params from the defined route
-			  var apiName = apiArguments[0];
-			  var apiUrl = apiArguments[1];
-			  var params = router.route(apiName).params;
-
-			  //  get the public facing request params and query
-			  var requestDefinition = getRequestDefinition(path.request, params);
-
-			  //  create the descriptor
-			  apiDescriptor.create(apiName, api, apiUrl, version, requestDefinition);
-
-			}));
-		  }));
-
-		}));
-
-		//  extract, mount, and register the router middleware
-		var middleware = router.middleware();
-
-		app.use(mount(CONF.apis.base + '/' + version, middleware));
-
-		routers.register(version, router);
-
-		//  does the current version match a release candidate
-		forEach(CONF.apis.releases, function (releaseVersion, releaseName) {
-
-		  if (version === releaseVersion) {
-
-			//  create the release version of the descriptor
-			apiDescriptor.createReleaseVersion(version, releaseName);
-
-			//  mount and register the release version of the api
-			app.use(mount(CONF.apis.base + '/' + releaseName, middleware));
-
-			routers.register(releaseName, router);
-
-		  }
-		});
-
-	  }));
-
 	  //  create a new router for the api descriptor and mount it
 	  var versionRouter = new Router();
 
 	  versionRouter.get('/:version', function * () {
-		this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
+		  this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
 	  });
 	  app.use(mount(CONF.apis.base, versionRouter.middleware()));
 
@@ -112,8 +49,9 @@ module.exports = function* (versions) {
 	  var healthRouter = new Router();
 
 	  healthRouter.get('/', function * () {
-		this.body = JSON.stringify(apiDescriptor.stable, null, 2);
+		  this.body = JSON.stringify(apiDescriptor.stable, null, 2);
 	  });
+
 	  app.use(mount(CONF.apis.health, healthRouter.middleware()));
 
 	  //  listen on port
@@ -121,7 +59,6 @@ module.exports = function* (versions) {
 
 	}
 	catch (e) {
-
 	  process.emit('server:start:error', module, e);
 	}
 
