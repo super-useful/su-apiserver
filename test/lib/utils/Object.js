@@ -34,7 +34,12 @@ describe(modulePath, function() {
             if (v === 'fail') throw new TypeError();
             return v;
           }
+        },
+        typeTest: {
+          enumerable: true,
+          type: 'string'
         }
+
       }]
     });
 

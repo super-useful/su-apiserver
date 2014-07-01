@@ -9,7 +9,7 @@ var rewire = require('rewire');
 
 var expect = chai.expect;
 
-var Base = require('super-base');
+var define = require('../../../lib/utils/Object');
 
 var fakes;
 var createApiDefinition;
@@ -40,7 +40,20 @@ describe('lib/start/createApiDefinition', function() {
         function * () {},
         function * () {}
       ],
-      request: Base.extend({})
+      request: define('Request', {
+        hasOne: {
+          params: define('Params', {
+            properties:[
+              {
+                prop: {
+                  enumerable: true,
+                  type: 'string'
+                }
+              }
+            ]
+          })
+        }
+      })
     }
 
     api = {
