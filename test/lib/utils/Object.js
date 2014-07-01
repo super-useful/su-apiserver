@@ -210,4 +210,23 @@ describe(modulePath, function() {
 
   });
 
+  describe('serialise', function () {
+
+    it('should serialise an objects read only properties', function () {
+
+      var serialised = model.serialise();
+
+      var match = {
+        setTest: 100,
+        theProperty: 'simon',
+        anotherProperty: 'sarahsarah'
+      };
+
+      expect(serialised).to.deep.equal(match);
+
+    });
+
+  });
+
+
 });
