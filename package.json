@@ -14,6 +14,7 @@
     "super-base": "x",
     "JSONStream": "x",
     "request": "x",
+    "node-uuid": "x",
     "event-stream": "x",
     "through": "x",
     "config": "x",
