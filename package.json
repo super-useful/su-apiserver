@@ -15,6 +15,7 @@
     "super-base": "x",
     "JSONStream": "x",
     "request": "x",
+    "node-uuid": "x",
     "event-stream": "x",
     "through": "x",
     "config": "x",
@@ -23,6 +24,7 @@
     "require-all": "x",
     "moment": "x",
     "useful-copy": "x",
+    "moment-timezone": "x",
     "useful-value": "x"
   },
   "devDependencies": {

@@ -29,7 +29,7 @@ module.exports = function* (versions) {
 
   var versionApi, versionNumber;
 
-	//  apis are specced by version - process each one
+  //  apis are specced by version - process each one
   for (versionNumber in versions) {
     if (Object.prototype.hasOwnProperty.call(versions, versionNumber)) {
       versionApi = versions[versionNumber];
@@ -38,31 +38,31 @@ module.exports = function* (versions) {
     }
   }
 
-	try {
-	  //  create a new router for the api descriptor and mount it
-	  var versionRouter = new Router();
+  try {
+    //  create a new router for the api descriptor and mount it
+    var versionRouter = new Router();
 
-	  versionRouter.get('/:version', function * () {
-		  this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
-	  });
-	  app.use(mount(CONF.apis.base, versionRouter.middleware()));
+    versionRouter.get('/:version', function * () {
+      this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
+    });
+    app.use(mount(CONF.apis.base, versionRouter.middleware()));
 
-	  //  add the health check
-	  var healthRouter = new Router();
+    //  add the health check
+    var healthRouter = new Router();
 
-	  healthRouter.get('/', function * () {
-		  this.body = JSON.stringify(apiDescriptor.stable, null, 2);
-	  });
+    healthRouter.get('/', function * () {
+      this.body = JSON.stringify(apiDescriptor.stable, null, 2);
+    });
 
-	  app.use(mount(CONF.apis.health, healthRouter.middleware()));
+    app.use(mount(CONF.apis.health, healthRouter.middleware()));
 
-	  //  listen on port
-	  app.listen(CONF.app.port);
+    //  listen on port
+    app.listen(CONF.app.port);
 
-	}
-	catch (e) {
-	  process.emit('server:start:error', module, e);
-	}
+  }
+  catch (e) {
+    process.emit('server:start:error', module, e);
+  }
 
-	return app;
+  return app;
 };

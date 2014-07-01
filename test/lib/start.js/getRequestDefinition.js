@@ -8,7 +8,7 @@ var rewire = require('rewire');
 
 var expect = chai.expect;
 
-var Base = require('super-base');
+var define = require('../../../lib/utils/Object');
 
 var fakes;
 var getRequestDefinition;
@@ -29,28 +29,32 @@ describe('lib/start/getRequestDefinition', function() {
       {name: 'to'}
     ]
 
-    Request = {
+    Request = define('Request', {
       hasOne: {
-        params: {
-          properties: {
+        params: define('Params', {
+          properties: [{
             from: {
+              type: 'string',
               format: 'format'
             },
             to: {
+              type: 'string',
               enums: 'enums'
             },
-            hidden: {}
-          }
-        },
-        query: {
-          properties: {
+            hidden: {
+              type: 'string',
+            }
+          }]
+        }),
+        query: define('Query', {
+          properties: [{
             q1: {
               type: 'string'
             }
-          }
-        }
+          }]
+        })
       }
-    };
+    });
 
 
   });
@@ -65,10 +69,10 @@ describe('lib/start/getRequestDefinition', function() {
 
     var definition = getRequestDefinition(Request, params);
 
-    expect(definition.params.from.format).to.be.equal(Request.hasOne.params.properties.from.format);
-    expect(definition.params.to.enums).to.be.equal(Request.hasOne.params.properties.to.enums);
+    expect(definition.params.from.format).to.be.equal(Request.propertyDefinitions.hasOne.params.propertyDefinitions.properties[0].from.format);
+    expect(definition.params.to.enums).to.be.equal(Request.propertyDefinitions.hasOne.params.propertyDefinitions.properties[0].to.enums);
     expect(definition.params.hidden).to.be.equal(undefined);
-    expect(definition.query.q1.type).to.be.equal(Request.hasOne.query.properties.q1.type);
+    expect(definition.query.q1.type).to.be.equal(Request.propertyDefinitions.hasOne.query.propertyDefinitions.properties[0].q1.type);
 
   });
 

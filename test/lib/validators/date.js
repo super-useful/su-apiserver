@@ -4,9 +4,9 @@ var sinon = require('sinon');
 var sinonChai = require("sinon-chai");
 
 var rewire = require('rewire');
+var moment = require('moment-timezone');
 
 var expect = chai.expect;
-
 var fakes;
 var date;
 
@@ -33,7 +33,7 @@ describe('lib/validators/date', function() {
 
       expect(function () {
 
-        date(/\d{4}-\d{2}-\d{2}/, 'YYYY-MM-DD', '1974-12');
+        date(/\d{4}-\d{2}-\d{2}/, 'YYYY-MM-DD', 'Europe/London', '1974-12');
 
       }).to.throw(TypeError);
 
@@ -43,17 +43,19 @@ describe('lib/validators/date', function() {
 
       expect(function () {
 
-        date(/\d{4}-\d{2}-\d{2}/, 'YYYY-MM-DD', '1974-12-34')
+        date(/\d{4}-\d{2}-\d{2}/, 'YYYY-MM-DD', 'Europe/London', '1974-12-34')
 
       }).to.throw(RangeError);
 
     });
 
-    it('should return the supplied date if it passes the validation check', function() {
+    it('should return the supplied date as a moment object if it passes the validation check', function() {
 
       var d = '1974-12-01';
-
-      expect(date(/\d{4}-\d{2}-\d{2}/, 'YYYY-MM-DD', d)).to.be.equal(d);
+      var m = date(/\d{4}-\d{2}-\d{2}/, 'YYYY-MM-DD', 'Europe/London', d);
+      var t = moment.tz(d, 'YYYY-MM-DD', 'Europe/London');
+      t.isValid();
+      expect(m).to.be.deep.equal(t);
 
     });
 

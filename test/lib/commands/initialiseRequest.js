@@ -11,7 +11,7 @@ var sinonChai = require("sinon-chai");
 var rewire = require('rewire');
 
 var RequestError = require('../../../lib/errors/RequestError');
-var Base = require('super-base');
+var define = require('../../../lib/utils/Object');
 
 var fakes;
 var underTest;
@@ -54,26 +54,21 @@ describe(modulePath, function() {
       header: {'x-csrf-token': '1234'}
     };
 
-    Request = Base.extend({
+    Request = define('Request', {
 
       hasOne: {
-
-        value: {
-
-          params: Base.extend({
-
-            properties: {
-              value: {
-                string: {
-                  type: 'string'
-                },
-                number: {
-                  type: 'number'
-                }
-              }
+        params: define('Params', {
+          properties: [{
+            string: {
+              enumerable: true,
+              type: 'string'
+            },
+            number: {
+              enumerable: true,
+              type: 'number'
             }
-          })
-        }
+          }]
+        })
       }
     });
 
@@ -122,7 +117,7 @@ describe(modulePath, function() {
 
       yield underTest.call(ctxSuccess, Request, next);
 
-      expect(Request.isPrototypeOf(ctxSuccess.r)).to.be.true;
+      expect(ctxSuccess.r).to.be.an.instanceof(Request);
 
     })(done);
 
