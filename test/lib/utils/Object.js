@@ -246,6 +246,29 @@ describe(modulePath, function() {
 
   });
 
+
+  describe('relation setters', function () {
+
+    it('should instantiate a new relation object from raw data', function () {
+
+      model.afterInit = {childName: 'Jefforson'};
+
+      expect(model.afterInit).to.be.instanceof(Relation);
+
+    });
+
+    it('should set the relation property if passed a relation', function () {
+
+      var relation = new Relation({childName: 'Jefforson'});
+      model.afterInit = relation;
+
+      expect(model.afterInit).to.be.equal(relation);
+
+    });
+
+  });
+
+
   describe('serialise', function () {
 
     it('should serialise an objects read only properties', function () {
@@ -281,19 +304,33 @@ describe(modulePath, function() {
     });
 
 
-    // it('should serialise an objects read only properties using the properties serialise getter if it exists', function () {
+    it('should serialise an objects read only properties using the properties serialise getter if it exists', function () {
 
-    //   var serialised = model.serialise();
+      var Serialiser = underTest('Serialiser', {
+        properties: [
+          {
+            prop: {
+              enumerable: true,
+              type: 'string',
+              serialise: function (value) {
+                return value + ' smells';
+              }
+            }
+          }
+        ]
+      });
 
-    //   var match = {
-    //     setTest: 100,
-    //     theProperty: 'simon',
-    //     anotherProperty: 'sarahsarah-serialised'
-    //   };
+      var serialiser = new Serialiser({prop: 'simon'});
 
-    //   expect(serialised).to.deep.equal(match);
+      var serialised = serialiser.serialise();
 
-    // });
+      var match = {
+        prop: 'simon smells'
+      };
+
+      expect(serialised).to.deep.equal(match);
+
+    });
 
 
   });
