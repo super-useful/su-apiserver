@@ -57,6 +57,7 @@
 	},
   "scripts": {
     "test": "make test",
+    "test-jenkins": "./node_modules/.bin/mocha --colors --harmony --recursive -R xunit ./test/**/**/*.js > test-reports.xml",
     "start": "node --harmony index.js"
   },
   "engines": {
