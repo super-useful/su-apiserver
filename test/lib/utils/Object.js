@@ -39,7 +39,6 @@ describe(modulePath, function() {
           enumerable: true,
           type: 'string'
         }
-
       }]
     });
 
@@ -102,7 +101,7 @@ describe(modulePath, function() {
 
   describe('definition', function () {
 
-    it('should throw an error if the property descriptors have no set method', function () {
+    it('should throw an error if the property descriptors have no set method or type', function () {
 
       expect(function () {
         underTest('Relation', {
@@ -113,6 +112,36 @@ describe(modulePath, function() {
           }]
         });
       }).to.throw(TypeError);
+
+    });
+
+    it('should not throw an error if the property descriptors have a type', function () {
+
+      expect(function () {
+        underTest('Relation', {
+          properties: [{
+            childName: {
+              enumerable: true,
+              type: 'string'
+            }
+          }]
+        });
+      }).to.not.throw(TypeError);
+
+    });
+
+    it('should not throw an error if the property descriptors have a set method', function () {
+
+      expect(function () {
+        underTest('Relation', {
+          properties: [{
+            childName: {
+              enumerable: true,
+              set: function () {}
+            }
+          }]
+        });
+      }).to.not.throw(TypeError);
 
     });
 
@@ -208,6 +237,13 @@ describe(modulePath, function() {
 
     });
 
+    it('should seal an object so it\'s structure cannot be fecked with', function () {
+
+      expect(Object.isSealed(model)).to.be.true;
+
+    });
+
+
   });
 
   describe('serialise', function () {
@@ -225,6 +261,40 @@ describe(modulePath, function() {
       expect(serialised).to.deep.equal(match);
 
     });
+
+    it('should recursively serialise an objects read only properties', function () {
+
+      var serialised = model.serialise(true);
+
+      var match = {
+        setTest: 100,
+        theProperty: 'simon',
+        anotherProperty: 'sarahsarah',
+        onInit: {
+          childName: 'Matilda',
+          typeTest: undefined
+        }
+      };
+
+      expect(serialised).to.deep.equal(match);
+
+    });
+
+
+    // it('should serialise an objects read only properties using the properties serialise getter if it exists', function () {
+
+    //   var serialised = model.serialise();
+
+    //   var match = {
+    //     setTest: 100,
+    //     theProperty: 'simon',
+    //     anotherProperty: 'sarahsarah-serialised'
+    //   };
+
+    //   expect(serialised).to.deep.equal(match);
+
+    // });
+
 
   });
 
