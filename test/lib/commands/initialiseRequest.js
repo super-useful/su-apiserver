@@ -86,7 +86,7 @@ describe(modulePath, function() {
   });
 
 
-  it('should attach a RequestError to the ctx if Request.init() errors', function (done) {
+  it('should attach a RequestError to the ctx if new Request() errors', function (done) {
 
     co(function * () {
 
@@ -99,7 +99,7 @@ describe(modulePath, function() {
   });
 
 
-  it('should register all the Request.init() errors with the RequestError', function (done) {
+  it('should register all the new Request() errors with the RequestError', function (done) {
 
     co(function * () {
 
