@@ -51,7 +51,7 @@ module.exports = function* (versions) {
     var healthRouter = new Router();
 
     healthRouter.get('/', function * () {
-      this.body = JSON.stringify(apiDescriptor.stable, null, 2);
+      this.body = JSON.stringify(apiDescriptor.versions.stable, null, 2);
     });
 
     app.use(mount(CONF.apis.health, healthRouter.middleware()));
