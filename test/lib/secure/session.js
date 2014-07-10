@@ -110,6 +110,24 @@ describe(modulePath, function() {
 
   });
 
+  it('should invalidate a token if it is too old, but still return the session data if `force === true`', function (done) {
+
+    co(function * () {
+
+      var t = yield underTest.set(sessionData);
+
+      yield sleep(SESSION_TIMEOUT * 2);
+
+      var session = yield underTest.get(token, true);
+
+      expect(session).to.not.be.null;
+
+      yield underTest.invalidate(token);
+
+    })(done);
+
+  });
+
   it('should return null if the token is already invalid', function (done) {
 
     co(function * () {
@@ -121,6 +139,22 @@ describe(modulePath, function() {
       var session = yield underTest.get(token);
 
       expect(session).to.be.null;
+
+    })(done);
+
+  });
+
+  it('should return the session data if the token is already invalid and `force === true`', function (done) {
+
+    co(function * () {
+
+      yield underTest.set(sessionData);
+
+      yield underTest.invalidate(token);
+
+      var session = yield underTest.get(token, true);
+
+      expect(session).to.not.be.null;
 
     })(done);
 
