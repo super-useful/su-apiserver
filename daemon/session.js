@@ -14,6 +14,8 @@ var cleanupTime = CONF.app.session.cleanup_time;
 var cleanupInterval = CONF.app.session.cleanup_interval;
 var map = iter.map;
 
+var intervalId = null;
+
 function* checkAndInvalidate(token) {
   var data = yield session.fget(token);
   var ms;
@@ -51,7 +53,18 @@ module.exports = exports = {
     }
 
     return exports;
+  },
+  start: function() {
+    intervalId = defer.interval(exports.cleanup, cleanupInterval);
+
+    return exports;
+  },
+  stop: function() {
+    clearInterval(intervalId);
+
+    intervalId = null;
+
+    return exports;
   }
 };
 
-defer.interval(exports.cleanup, cleanupInterval);
