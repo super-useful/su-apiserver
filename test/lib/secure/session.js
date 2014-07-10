@@ -110,7 +110,7 @@ describe(modulePath, function() {
 
   });
 
-  it('should invalidate a token if it is too old, but still return the session data if `force === true`', function (done) {
+  it('#fget should invalidate a token if it is too old, but still return the session data', function (done) {
 
     co(function * () {
 
@@ -118,7 +118,7 @@ describe(modulePath, function() {
 
       yield sleep(SESSION_TIMEOUT * 2);
 
-      var session = yield underTest.get(token, true);
+      var session = yield underTest.fget(token);
 
       expect(session).to.not.be.null;
 
@@ -144,7 +144,7 @@ describe(modulePath, function() {
 
   });
 
-  it('should return the session data if the token is already invalid and `force === true`', function (done) {
+  it('#fget should return the session data if the token is already invalid', function (done) {
 
     co(function * () {
 
@@ -152,7 +152,7 @@ describe(modulePath, function() {
 
       yield underTest.invalidate(token);
 
-      var session = yield underTest.get(token, true);
+      var session = yield underTest.fget(token);
 
       expect(session).to.not.be.null;
 
