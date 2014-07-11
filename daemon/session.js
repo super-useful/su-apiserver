@@ -2,6 +2,7 @@ var path = require('path');
 
 var co = require('co');
 var defer = require('co-defer');
+var is = require('super-is');
 var iter = require('super-iter');
 var CONF = require('config');
 
@@ -12,7 +13,9 @@ var bus = new require('events').EventEmitter;
 
 var cleanupTime = CONF.app.session.cleanup_time;
 var cleanupInterval = CONF.app.session.cleanup_interval;
+
 var map = iter.map;
+var typeOf = is.typeOf;
 
 var intervalId = null;
 
@@ -49,6 +52,10 @@ module.exports = exports = {
   },
   listen: function(cb) {
     if (typeof cb === 'function') {
+      if (typeOf(cb) === 'generator') {
+        cb = co(cb);
+      }
+
       bus.on('session:expired', cb);
     }
 
