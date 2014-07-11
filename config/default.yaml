@@ -3,6 +3,8 @@ app:
   session:
     host: "localhost"
     port: 6379
+    cleanup_time: 7200000
+    cleanup_interval: 3600000
   global_request_timeout: 5000
 log:
   customlevels:
