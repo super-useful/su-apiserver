@@ -6,7 +6,7 @@ var is = require('super-is');
 var iter = require('super-iter');
 var CONF = require('config');
 
-var session = require(path.resolve('./lib/secure/session'));
+var session = require('../lib/secure/session');
 var store = require('co-redis')(require('redis').createClient(CONF.app.session.port, CONF.app.session.host));
 
 var bus = new require('events').EventEmitter;
