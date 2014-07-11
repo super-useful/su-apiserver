@@ -1,3 +1,4 @@
+var EventEmitter = require('events').EventEmitter;
 var path = require('path');
 
 var co = require('co');
@@ -9,7 +10,7 @@ var CONF = require('config');
 var session = require('../lib/secure/session');
 var store = require('co-redis')(require('redis').createClient(CONF.app.session.port, CONF.app.session.host));
 
-var bus = new require('events').EventEmitter;
+var bus = new EventEmitter();
 
 var cleanupTime = CONF.app.session.cleanup_time;
 var cleanupInterval = CONF.app.session.cleanup_interval;
@@ -21,14 +22,16 @@ var intervalId = null;
 
 function* checkAndInvalidate(token) {
   var data = yield session.fget(token);
-  var ms;
 
   if (data) {
-    ms = Date.now() - data.timeout;
+    var ms = Date.now() - data.timestamp;
 
     if (!data.isValid || ms >= cleanupTime) {
       yield invalidate(token, data);
     }
+  }
+  else {
+      yield invalidate(token, null);
   }
 
   return token;
@@ -36,8 +39,11 @@ function* checkAndInvalidate(token) {
 
 function* invalidate(token, data) {
   yield store.del(token);
+  yield store.lrem('token_list', 0, token);
 
-  bus.emit('session:expired', data);
+  if (data !== null) {
+    bus.emit('session:expired', token, data);
+  }
 }
 
 module.exports = exports = {
@@ -52,10 +58,6 @@ module.exports = exports = {
   },
   listen: function(cb) {
     if (typeof cb === 'function') {
-      if (typeOf(cb) === 'generator') {
-        cb = co(cb);
-      }
-
       bus.on('session:expired', cb);
     }
 
