@@ -11,7 +11,7 @@ var rewire = require('rewire');
 var expect = chai.expect;
 var fakes;
 var underTest;
-var modulePath = 'lib/utils/Object';
+var modulePath = 'lib/request/Object';
 var Model;
 var Relation;
 var Parent;
