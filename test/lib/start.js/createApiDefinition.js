@@ -9,7 +9,7 @@ var rewire = require('rewire');
 
 var expect = chai.expect;
 
-var define = require('../../../lib/utils/Object');
+var define = require('../../../lib/request/Object');
 
 var fakes;
 var createApiDefinition;

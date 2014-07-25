@@ -11,7 +11,7 @@ var sinonChai = require("sinon-chai");
 var rewire = require('rewire');
 
 var RequestError = require('../../../lib/errors/RequestError');
-var define = require('../../../lib/utils/Object');
+var define = require('../../../lib/request/Object');
 
 var fakes;
 var underTest;
