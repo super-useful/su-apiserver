@@ -3,3 +3,4 @@ node_modules
 *.rdb
 tmp
 config/runtime.json
+*.pid
