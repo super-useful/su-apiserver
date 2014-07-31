@@ -6,6 +6,7 @@ app:
     cleanup_time: 7200000
     cleanup_interval: 3600000
   global_request_timeout: 5000
+  global_session_timeout: 3600000
 log:
   customlevels:
     ERROR: 1
