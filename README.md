@@ -85,22 +85,22 @@ A `Definition` is an Array of Objects that is defined as the following:
 * `method` String - HTTP method i.e `GET`
 * `type` String - The response type i.e `json`
 * `paths` Object<String, Path> - Defines the RESTful path name and corresponding path definitions (see below for `Path` definition).
-* `query` Function* - Koa middleware generator that should perform any database queries before transfering control to the pipeline middlewares.
-* `pipeline` Array<Function*> - Ordered set of Koa middlewares that perform any relevent logic to fulfil the request
+* `query` GeneratorFunction - Koa middleware generator that should perform any database queries before transfering control to the pipeline middlewares.
+* `pipeline` Array<GeneratorFunction> - Ordered set of Koa middlewares that perform any relevent logic to fulfil the request
 
 Within a `Definition` a `Path` is defined as the following. Note that the actual name of the path within the `paths` property forms part of the RESTful URL.
 
 * `params` String - Any reamining segments of the URL with Koa style parameters i.e `pets/:id`.
 * `request` RequestObject - A definition of the request used for validation.
-* `interceptors` Array<Function*> - Ordered set of Koa middleware called first for the request.
+* `interceptors` Array<GeneratorFunction> - Ordered set of Koa middleware called first for the request.
 
 #### interceptors/
 
-A hash of `string` / `Function*`  pairs denoting the interceptor name and the implementing generator.
+A hash of `string` / `GeneratorFunction`  pairs denoting the interceptor name and the implementing generator.
 
 #### queries/
 
-A hash of `string` / `Function*`  pairs denoting the query name and the implementing generator.
+A hash of `string` / `GeneratorFunction`  pairs denoting the query name and the implementing generator.
 
 #### request/
 
@@ -108,4 +108,4 @@ A hash of `string` / `RequestObject` pairs where `RequestObject` is of type `su-
 
 #### transformers/
 
-A hash of `string` / `Function*`  pairs denoting the transofmer name and the implementing generator.
+A hash of `string` / `GeneratorFunction`  pairs denoting the transofmer name and the implementing generator.
