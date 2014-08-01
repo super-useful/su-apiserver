@@ -86,13 +86,20 @@ describe(modulePath, function() {
   });
 
 
-  it('should attach a RequestError to the ctx if new Request() errors', function (done) {
+  it('should throw a RequestError if new Request() errors', function (done) {
 
     co(function * () {
 
-      yield underTest.call(ctxError, Request, next);
+      var e;
 
-      expect(ctxError.e).to.be.instanceof(RequestError);
+      try {
+        yield underTest.call(ctxError, Request, next);
+      }
+      catch (err) {
+        e = err;
+      }
+
+      expect(e).to.be.instanceof(RequestError);
 
     })(done);
 
@@ -103,9 +110,16 @@ describe(modulePath, function() {
 
     co(function * () {
 
-      yield underTest.call(ctxError, Request, next);
+      var e;
 
-      expect(ctxError.e.errors.length).to.be.equal(2);
+      try {
+        yield underTest.call(ctxError, Request, next);
+      }
+      catch (err) {
+        e = err;
+      }
+
+      expect(e.errors.length).to.be.equal(2);
 
     })(done);
 

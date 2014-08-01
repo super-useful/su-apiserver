@@ -55,13 +55,20 @@ describe(modulePath, function() {
   });
 
 
-  it('should attach an InternalServerError to the ctx if there is a problem', function (done) {
+  it('should throw an InternalServerError if there is a problem', function (done) {
 
     co(function * () {
 
-      yield underTest.call(ctxError, appApi, next);
+      var e;
 
-      expect(ctxError.e).to.be.instanceof(InternalServerError);
+      try {
+        yield underTest.call(ctxError, appApi, next);
+      }
+      catch (err) {
+        e = err;
+      }
+
+      expect(e).to.be.instanceof(InternalServerError);
 
     })(done);
 

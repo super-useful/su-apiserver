@@ -54,11 +54,11 @@ describe(modulePath, function() {
                   }),
                   interceptors: [
                     function * (next) {
-                      if (!this.e) {
-                        if (this.r.params.foo == 'error') {
-                          this.e = new InternalServerError();
-                        }
+
+                      if (this.r.params.foo == 'error') {
+                        throw new InternalServerError(new Error());
                       }
+
                       yield next;
                     }
                   ]
@@ -115,14 +115,16 @@ describe(modulePath, function() {
     co(function * () {
       request.get('/apis/0.0.1/test_api/foo/shouldBeNumber')
         .expect(400)
+        .expect('Content-Type', /^application\/json/)
         .end(done)
     })();
   });
 
-  it('if interceptor sets error then stack unwinds early', function (done) {
+  it('if interceptor throws error then stack unwinds early', function (done) {
     co(function * () {
       request.get('/apis/0.0.1/test_api/error/1')
         .expect(500)
+        .expect('Content-Type', /^application\/json/)
         .end(done)
     })();
   });
