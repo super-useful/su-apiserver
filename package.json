@@ -59,7 +59,7 @@
     "url": "git@github.com:super-useful/su-apiserver.git"
   },
   "scripts": {
-    "test": "make test",
+    "test": "node --harmony --harmony_typeof ./node_modules/mocha/bin/_mocha --colors --recursive --ui tdd --reporter spec ./test --NODE_ENV=test",
     "test-jenkins": "./node_modules/.bin/mocha --colors --harmony --recursive -R xunit ./test/**/**/*.js > test-reports.xml",
     "start": "node --harmony index.js"
   },
