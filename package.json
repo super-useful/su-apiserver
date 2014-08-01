@@ -35,26 +35,29 @@
   },
   "devDependencies": {
     "assert": "*",
-    "should": "*",
-    "mocha": "*",
     "chai": "*",
+    "mocha": "*",
+    "rewire": "2.0.x",
+    "should": "*",
     "sinon": "*",
     "sinon-chai": "*",
-    "rewire": "2.0.x"
+    "supertest": "^0.13.0"
   },
   "main": "index.js",
   "author": {
     "Simon Jefford": "si@ibrokethat.com",
     "Christos Constandinou": "constantology@gmail.com"
   },
-  "license":[ {
-    "type": "MIT",
-    "url": "https://raw.github.com/super-useful/su-apiserver/master/LICENSE"
-  }],
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:super-useful/su-apiserver.git"
-	},
+  "license": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/super-useful/su-apiserver/master/LICENSE"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:super-useful/su-apiserver.git"
+  },
   "scripts": {
     "test": "make test",
     "test-jenkins": "./node_modules/.bin/mocha --colors --harmony --recursive -R xunit ./test/**/**/*.js > test-reports.xml",
@@ -63,5 +66,4 @@
   "engines": {
     "node": "0.11.x"
   }
-
 }

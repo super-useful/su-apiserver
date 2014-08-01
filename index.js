@@ -56,13 +56,9 @@ module.exports = function* (versions) {
 
     app.use(mount(CONF.apis.health, healthRouter.middleware()));
 
-    //  listen on port
-    app.listen(CONF.app.port);
-
+    return app.listen(CONF.app.port);
   }
   catch (e) {
     process.emit('server:start:error', module, e);
   }
-
-  return app;
 };
