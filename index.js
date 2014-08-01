@@ -20,6 +20,31 @@ var app = koa();
 
 app.use(Router());
 
+//  to overwrite default koa error repsonse style
+//  we bind error handler to the app
+app.on('error', function (e, ctx) {
+
+  process.emit('request:error', ctx.request.originalUrl, e);
+
+  var status = e.status || '500';
+  var res = {
+      status: {
+        httpStatus: status,
+        success: false
+      },
+      data: e.toString()
+    };
+
+  res = JSON.stringify(res);
+
+  ctx.type = 'json';
+  ctx.status = status;
+  ctx.length = Buffer.byteLength(res);
+  ctx.res.end(res);
+
+});
+
+
 module.exports = function* (versions) {
   var koa_modules = Array.prototype.slice.call(arguments, 1);
 
@@ -56,9 +81,11 @@ module.exports = function* (versions) {
 
     app.use(mount(CONF.apis.health, healthRouter.middleware()));
 
+    //  listen on port
     return app.listen(CONF.app.port);
   }
   catch (e) {
+
     process.emit('server:start:error', module, e);
   }
 };
