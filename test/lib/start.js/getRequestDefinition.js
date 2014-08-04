@@ -8,7 +8,7 @@ var rewire = require('rewire');
 
 var expect = chai.expect;
 
-var define = require('../../../lib/request/Object');
+var define = require('su-define-object');
 
 var fakes;
 var getRequestDefinition;

@@ -104,7 +104,7 @@ A hash of `string` / `GeneratorFunction`  pairs denoting the query name and the 
 
 #### request/
 
-A hash of `string` / `RequestObject` pairs where `RequestObject` is of type `su-apiserver/lib/request/Object`. These denote the request name and the implemented class.
+A hash of `string` / `RequestObject` pairs where `RequestObject` is of type `su-define-object`. These denote the request name and the implemented class.
 
 #### transformers/
 

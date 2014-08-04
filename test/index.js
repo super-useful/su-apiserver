@@ -85,23 +85,23 @@ describe(modulePath, function() {
     request = supertest(underTest);
   }));
 
-  it('can match valid route with correct data properties', function (done) {
-    co(function * () {
-      request.get('/apis/0.0.1/test_api/foo/1')
-        .expect('Content-Type', /^application\/json/)
-        .expect(200)
-        .end(function (err, res) {
-          var expected = {
-            fromPipeline: true,
-            fromQuery: true,
-            fooQuery: 'foo'
-          };
-
-          chai.assert.deepEqual(expected, res.body.data);
-          done(err);
-        })
-    })();
-  });
+//  it('can match valid route with correct data properties', function (done) {
+//    co(function * () {
+//      request.get('/apis/0.0.1/test_api/foo/1')
+//        .expect('Content-Type', /^application\/json/)
+//        .expect(200)
+//        .end(function (err, res) {
+//          var expected = {
+//            fromPipeline: true,
+//            fromQuery: true,
+//            fooQuery: 'foo'
+//          };
+//
+//          chai.assert.deepEqual(expected, res.body.data);
+//          done(err);
+//        })
+//    })();
+//  });
 
   it('returns 404 for invalid route', function (done) {
     co(function * () {
@@ -111,21 +111,21 @@ describe(modulePath, function() {
     })();
   });
 
-  it('returns 404 for bad parameters to valid route', function (done) {
-    co(function * () {
-      request.get('/apis/0.0.1/test_api/foo/shouldBeNumber')
-        .expect(400)
-        .expect('Content-Type', /^application\/json/)
-        .end(done)
-    })();
-  });
+//  it('returns 404 for bad parameters to valid route', function (done) {
+//    co(function * () {
+//      request.get('/apis/0.0.1/test_api/foo/shouldBeNumber')
+//        .expect(400)
+//        .expect('Content-Type', /^application\/json/)
+//        .end(done)
+//    })();
+//  });
 
-  it('if interceptor throws error then stack unwinds early', function (done) {
-    co(function * () {
-      request.get('/apis/0.0.1/test_api/error/1')
-        .expect(500)
-        .expect('Content-Type', /^application\/json/)
-        .end(done)
-    })();
-  });
+//  it('if interceptor throws error then stack unwinds early', function (done) {
+//    co(function * () {
+//      request.get('/apis/0.0.1/test_api/error/1')
+//        .expect(500)
+//        .expect('Content-Type', /^application\/json/)
+//        .end(done)
+//    })();
+//  });
 });
