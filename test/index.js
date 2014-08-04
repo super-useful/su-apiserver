@@ -9,7 +9,7 @@ var supertest = require('supertest');
 var rewire = require('rewire');
 
 var InternalServerError = require('../lib/errors/InternalServerError');
-var define = require('../lib/request/Object');
+var define = require('su-define-object');
 var stringToNumber = require('../lib/validators/stringToNumber');
 
 var CONF = require('config');

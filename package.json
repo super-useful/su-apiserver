@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "description": "koa api initialisation and web server",
   "dependencies": {
+    "su-apisession": "git+ssh://git@github.com:super-useful/su-apisession.git",
+    "su-logger": "git+ssh://git@github.com:super-useful/su-logger.git",
     "co": "x",
     "co-defer": "x",
     "co-redis": "x",

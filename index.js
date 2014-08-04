@@ -1,5 +1,7 @@
 'use strict';
 
+require('su-logger');
+
 var iter = require('super-iter');
 var forEach = iter.forEach;
 
@@ -13,8 +15,6 @@ var apiDescriptor = require('./lib/start/apiDescriptor');
 var createApiVersion = require('./lib/start/createApiVersion');
 
 var routers = require('./lib/utils/routers');
-
-require('./lib/start/logger');
 
 var app = koa();
 
