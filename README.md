@@ -115,6 +115,5 @@ A hash of `string` / `GeneratorFunction`  pairs denoting the transofmer name and
 
  - Move the versioning to be per API
  - Update the config release tag -> version mapping to reflect new version structure
- - Look at using ramda
  - Modify transformer steps to become lazy sequence maps, filters etc used by a single koa middleware as opposed to a set of middlewares. Should make things more flexible as we can compose transforms out of single responsibility functions.
-
+ - add extra service checks to healthcheck. eg, redis, ssh tunnel, etc
