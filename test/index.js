@@ -17,73 +17,29 @@ var CONF = require('config');
 var app;
 var request;
 var modulePath = 'index';
-var versions;
+var versions = require('require-all')(path.join(process.cwd(), 'test/apis'));
 
 chai.use(sinonChai);
 
-describe(modulePath, function() {
+describe.only(modulePath, function() {
+
 
   before(co(function * () {
-    versions = {
-      '0.0.1': {
-        'definitions': {
-          'test_api':     [
-            {
-              method: 'GET',
-              type: 'json',
-              paths: {
-                default: {
-                  params: '/:foo/:bar',
-                  request: define('Request', {
-                    hasOne: {
-                      params: define('Params', {
-                        properties: [
-                            {
-                              foo: {
-                                enumerable: true,
-                                type: 'string'
-                              },
-                              bar: {
-                                enumerable: true,
-                                set: stringToNumber
-                              }
-                            }
-                        ]
-                      })
-                    }
-                  }),
-                  interceptors: [
-                    function * (next) {
 
-                      if (this.r.params.foo == 'error') {
-                        throw new InternalServerError(new Error());
-                      }
-
-                      yield next;
-                    }
-                  ]
-                }
-              },
-              query: function* () {
-                return {
-                  fromQuery: true
-                };
-              },
-              pipeline: [
-                function* () {
-                  this.data.fromPipeline = true;
-                  this.data.fooQuery = this.r.params.foo;
-                }
-              ]
-            }
-          ]
-        }
-      }
-    };
-    app = rewire(path.resolve(modulePath));
+    app = require(path.resolve(modulePath));
     var underTest = yield app(versions);
     request = supertest(underTest);
+
   }));
+
+  it('returns 200 valid response for a stable api', function (done) {
+    co(function * () {
+      request.get('/apis/stable/train')
+        .expect(200)
+        .end(done)
+    })();
+  });
+
 
 //  it('can match valid route with correct data properties', function (done) {
 //    co(function * () {
@@ -106,7 +62,7 @@ describe(modulePath, function() {
   it('returns 404 for invalid route', function (done) {
     co(function * () {
       request.get('/apis/0.0.1/non_existent/foo/1')
-        .expect(404)
+        .expect(200)
         .end(done)
     })();
   });
