@@ -1,4 +1,4 @@
-var InternalServerError = require('../../lib/errors/InternalServerError');
+var InternalServerError = require('../../../../../lib/errors/InternalServerError');
 
 module.exports = function * stationClosed (next) {
 

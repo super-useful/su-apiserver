@@ -1,5 +1,5 @@
 var define = require('su-define-object');
-var stringToNumber = require('../../lib/validators/stringToNumber');
+var stringToNumber = require('../../../../lib/validators/stringToNumber');
 
 module.exports = define('Request', {
   hasOne: {
@@ -18,4 +18,4 @@ module.exports = define('Request', {
       ]
     })
   }
-}),
+});
