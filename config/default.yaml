@@ -17,9 +17,11 @@ apis:
   base: "/apis"
   health: "/service/healthcheck"
   releases:
-    stable: "0.0.0"
-    beta: "0.0.0"
-    alpha: "0.0.0"
+    train:
+      stable: "0.0.0"
+      beta: "1.0.0"
+    bus:
+      stable: "0.1.0"
 # made each error an associative array
 # in case we want to add anything more like
 # default messages/data/content-type
@@ -45,3 +47,4 @@ errors:
   503:
     id: ServiceUnavailable
     message: 'This service is currently not available.'
+

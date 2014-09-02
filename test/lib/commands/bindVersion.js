@@ -40,7 +40,7 @@ describe(modulePath, function() {
     ctxError = {};
 
     routers = underTest.__get__('routers');
-    fakes.stub(routers, 'getActive').returns(10)
+    fakes.stub(routers, 'get').returns(10)
 
   });
 
@@ -93,7 +93,7 @@ describe(modulePath, function() {
 
       yield underTest.call(ctxSuccess, appApi, next);
 
-      expect(routers.getActive).to.have.been.calledWith('0.0.0');
+      expect(routers.get).to.have.been.calledWith('0.0.0');
       expect(ctxSuccess.v.router).to.be.equal(10);
 
     })(done);

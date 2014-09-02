@@ -60,27 +60,29 @@ describe('lib/start/apiDescriptor', function() {
 
     });
 
-    it('should throw an error if the supplied version has alreay been set', function() {
+    it('should do nothing if the version has alreay been set', function() {
 
       apiDescriptor.initialiseVersion(version);
-      expect(function () {
 
-        apiDescriptor.initialiseVersion(version);
+      var v = apiDescriptor.versions.v1;
 
-      }).to.throw(RangeError);
+      apiDescriptor.initialiseVersion(version);
+
+      expect(v).to.be.equal(apiDescriptor.versions.v1);
 
     });
+
+
 
   });
 
 
   describe('create', function () {
 
-
     it('should push a data structure representing an API on the correct version array', function() {
 
       apiDescriptor.initialiseVersion(version);
-      apiDescriptor.create(apiName, api, apiUrl, version, requestDefinition);
+      apiDescriptor.create(apiName, api, apiUrl, version, version, requestDefinition);
 
       var v = apiDescriptor.versions[version][0];
 
@@ -90,6 +92,7 @@ describe('lib/start/apiDescriptor', function() {
       expect(v.url).to.be.equal(CONF.apis.base + '/' + version + apiUrl);
       expect(v.params).to.be.equal(requestDefinition.params);
       expect(v.query).to.be.equal(requestDefinition.query);
+      expect(v.version).to.be.equal(version);
     });
 
     it('should throw an error if the supplied version does not exist', function() {
@@ -104,39 +107,5 @@ describe('lib/start/apiDescriptor', function() {
 
   });
 
-
-
-  describe('createReleaseVersion', function () {
-
-
-    it('should push a data structure representing an API on the correct version array', function() {
-
-      apiDescriptor.initialiseVersion(version);
-      apiDescriptor.create(apiName, api, apiUrl, version, requestDefinition);
-
-      apiDescriptor.createReleaseVersion(version, releaseName);
-
-      var v = apiDescriptor.versions[releaseName][0];
-
-      expect(v.id).to.be.equal(apiName);
-      expect(v.method).to.be.equal(api.method);
-      expect(v.type).to.be.equal(api.type);
-      expect(v.url).to.be.equal(CONF.apis.base + '/' + releaseName + apiUrl);
-      expect(v.params).to.be.equal(requestDefinition.params);
-      expect(v.query).to.be.equal(requestDefinition.query);
-    });
-
-    it('should throw an error if the supplied releaseName has already been used', function() {
-
-      apiDescriptor.initialiseVersion(releaseName);
-      expect(function () {
-
-        apiDescriptor.createReleaseVersion(version, releaseName);
-
-      }).to.throw(RangeError);
-
-    });
-
-  })
 
 });
