@@ -4,6 +4,7 @@ require('su-logger');
 
 var iter = require('super-iter');
 var forEach = iter.forEach;
+var reduce = iter.reduce;
 
 var CONF = require('config');
 
@@ -12,7 +13,6 @@ var mount = require('koa-mount');
 var Router = require('koa-router');
 
 var apiDescriptor = require('./lib/start/apiDescriptor');
-var createApiVersion = require('./lib/start/createApiVersion');
 var createApiDefinition = require('./lib/start/createApiDefinition');
 var getRequestDefinition = require('./lib/start/getRequestDefinition');
 
@@ -49,74 +49,93 @@ app.on('error', function (e, ctx) {
 
 module.exports = function * (apis) {
 
-  var koaModules = Array.prototype.slice.call(arguments, 1);
+  try {
 
-  forEach(koaModules, function(mod) {
-    app.use(mod);
-  });
+    var koaModules = Array.prototype.slice.call(arguments, 1);
 
-  var versionApi, versionNumber;
+    forEach(koaModules, function(mod) {
+      app.use(mod);
+    });
 
-  //  apis are specced by version - process each one
-  // for (versionNumber in versions) {
-  //   if (Object.prototype.hasOwnProperty.call(versions, versionNumber)) {
+    //  start processing each api
+    forEach(apis, function (api, endpointName) {
 
-  //     versionApi = versions[versionNumber];
-  //     console.log(versionApi)
-  //     yield createApiVersion(app, routers, versionApi, versionNumber);
-  //   }
-  // }
+      //  lets get the releases this api is mapped to
+      var releases = CONF.apis.releases[endpointName];
 
-  //  start processing each api
-  forEach(apis, function (api, endpointName) {
+      //  include all version definitions that exist for the api
+      forEach(api, function (apiDef, version) {
 
-    //  include all version definitions that exist for the api
-    forEach(api, function (apiDef, version) {
+        //  init the container for the descriptors
+        apiDescriptor.initialiseVersion(version);
 
-      //  get the router we need to mount for this version
-      var router = routers.getActive(version);
-      router = new Router();
-      // if there is application functionality specific to this API version, then smoke it up...
-      var apiApp = (function * () {
-        return typeof apiDef.app === 'function' ? yield apiDef.app() : {};
-      }());
+        //  get the release routers bound to this version
+        var releaseRouters = reduce(releases, function (acc, v, release) {
 
-      //  grab the file where the endpoints are configured and create them
-      forEach(apiDef.index, function (endpoint) {
+          if (v === version) {
+            apiDescriptor.initialiseVersion(release);
+            acc[release] = routers.get(release);
+          }
+          return acc;
 
-        var endpointMethod = endpoint.method.toLowerCase();
+        }, Object.create(null));
 
-        //  an endpoint can have more than one path
-        forEach(endpoint.paths, function (endpointPath, endpointPathName) {
+        //  get the router we need to mount for this version
+        var versionRouter = routers.get(version);
 
-          //  build the pipeline and register it with the router
-          var endpointPipeline = createApiDefinition(endpointName, endpointPathName, endpointPath, endpoint, apiApp);
-          router[endpointMethod].apply(router, endpointPipeline);
+        // if there is application functionality specific to this API version, then smoke it up...
+        var apiApp = (function * () {
+          return typeof apiDef.app === 'function' ? yield apiDef.app() : {};
+        })();
 
-          //  extract the params from the defined route
-          var apiName = endpointPipeline[0];
-          var apiUrl = endpointPipeline[1];
-          var params = router.route(apiName).params;
+        //  grab the file where the endpoints are configured and create them
+        forEach(apiDef.index, function (endpoint) {
 
-          //  get the public facing request params and query
-          var requestDefinition = getRequestDefinition(endpointPath.request, params);
+          var endpointMethod = endpoint.method.toLowerCase();
 
-          //  create the descriptor
-          apiDescriptor.create(apiName, endpoint, apiUrl, version, requestDefinition);
+          //  an endpoint can have more than one path
+          forEach(endpoint.paths, function (endpointPath, endpointPathName) {
 
-          console.log(apiName, version, requestDefinition);
+            //  build the pipeline and register it with the routers
+            var endpointPipeline = createApiDefinition(endpointName, endpointPathName, endpointPath, endpoint, apiApp);
+
+            versionRouter[endpointMethod].apply(versionRouter, endpointPipeline);
+
+            forEach(releaseRouters, function (router, release) {
+              router[endpointMethod].apply(router, endpointPipeline);
+            });
+
+            //  extract the params from the defined route
+            var apiName = endpointPipeline[0];
+            var apiUrl = endpointPipeline[1];
+            var params = versionRouter.route(apiName).params;
+
+            //  get the public facing request params and query
+            var requestDefinition = getRequestDefinition(endpointPath.request, params);
+
+            //  create the descriptors
+            apiDescriptor.create(apiName, endpoint, apiUrl, version, version,requestDefinition);
+
+            forEach(releaseRouters, function (router, release) {
+              apiDescriptor.create(apiName, endpoint, apiUrl, version, release, requestDefinition);
+            });
+
+          });
+
         });
-
-        // var apiDefinition = yield createApiVersion();
 
       });
 
+    });
+
+
+    //  mount the apis by version
+    forEach(routers.get(), function (router, version) {
+
+      app.use(mount(CONF.apis.base + '/' + version, router.middleware()));
 
     });
 
-  });
-
-  try {
     //  create a new router for the api descriptor and mount it
     var versionRouter = new Router();
 
