@@ -20,3 +20,28 @@ apis:
     stable: "0.0.0"
     beta: "0.0.0"
     alpha: "0.0.0"
+# made each error an associative array
+# in case we want to add anything more like
+# default messages/data/content-type
+errors:
+  400:
+    id: BadRequest
+    message: 'Bad Request.'
+  401:
+    id: Unauthorized
+    message: 'Invalid Session.'
+  403:
+    id: Forbidden
+    message: 'You cannot access the requested service.'
+  408:
+    id: RequestTimeout
+    message: 'Request Timeout.'
+  500:
+    id: InternalServer
+    message: 'Internal Server Error.'
+  501:
+    id: NotImplemented
+    message: 'This service has not yet been implemented.'
+  503:
+    id: ServiceUnavailable
+    message: 'This service is currently not available.'

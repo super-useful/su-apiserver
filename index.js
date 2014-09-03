@@ -32,13 +32,19 @@ app.on('error', function (e, ctx) {
         httpStatus: status,
         success: false
       },
-      data: e.toString()
+      data: {
+        message : e.toString()
+      }
     };
+
+  if (CONF.debug === true) {
+    res.data.stack = e.stack.split('\n')
+  }
 
   res = JSON.stringify(res);
 
   ctx.type = 'json';
-  ctx.status = status;
+  ctx.status = status >>> 0;
   ctx.length = Buffer.byteLength(res);
   ctx.res.end(res);
 
