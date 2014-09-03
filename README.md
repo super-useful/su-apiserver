@@ -58,7 +58,7 @@ A typical app structure is given below along with explanations of each item.
   __common__/
     interceptors/
     transformers/
-	route1/
+  route1/
 	  interceptors/
 	  transformers/
     index.js
