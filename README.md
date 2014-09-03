@@ -59,8 +59,8 @@ A typical app structure is given below along with explanations of each item.
     interceptors/
     transformers/
   route1/
-	  interceptors/
-	  transformers/
+    interceptors/
+    transformers/
     index.js
     query.js
     Request.js
