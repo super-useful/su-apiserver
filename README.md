@@ -109,11 +109,11 @@ Within a `Definition` a `Path` is defined as the following. Note that the actual
 
 `Koa middleware` transform the response before returning it to the client
 
-#### Request.js
+#### route[n]/Request.js
 
 `su-define-object` A definition of the request used for validation
 
-#### query.js
+#### route[n]/query.js
 
 `Koa middleware` performs DB queries/ API calls
 
