@@ -117,7 +117,7 @@ Within a `Definition` a `Path` is defined as the following. Note that the actual
 
 `Koa middleware` transform the response before returning it to the client
 
-#### \'__common__/\'
+#### \_\_common\_\_/
 
 `Koa middleware` functionality that is shared between routes lives here
 
