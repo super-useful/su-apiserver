@@ -70,8 +70,8 @@ A typical app structure is given below along with explanations of each item.
     index.js
     query.js
     Request.js
-	app.js
-	config.yaml
+  app.js
+  config.yaml
 
 ```
 
