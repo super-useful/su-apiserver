@@ -21,6 +21,39 @@ var versions = require('require-all')(path.join(process.cwd(), 'test/apis'));
 
 chai.use(sinonChai);
 
+function generateDescriptor (version, release) {
+  return [
+    {
+      "id": "bus-default",
+      "method": "GET",
+      "type": "json",
+      "url": "/apis/" + release + "/bus/station/:station/platform/:platform",
+      "version": version,
+      "params": {
+        "station": {
+          "type": "string"
+        },
+        "platform": {}
+      },
+      "query": {}
+    },
+    {
+      "id": "train-default",
+      "method": "GET",
+      "type": "json",
+      "url": "/apis/" + release + "/train/station/:station/platform/:platform",
+      "version": version,
+      "params": {
+        "station": {
+          "type": "string"
+        },
+        "platform": {}
+      },
+      "query": {}
+    }
+  ];
+}
+
 describe(modulePath, function() {
 
 
@@ -32,46 +65,17 @@ describe(modulePath, function() {
 
   }));
 
-  describe('apis by version', function () {
+  describe('desciptor file processes correctly', function () {
 
     it('returns the api descriptor for a given version', function (done) {
       co(function * () {
-        request.get('/apis/0.0.0')
+        request.get('/apis/v0.0.0')
           .expect(200)
           .end(function (err, res) {
 
             res = JSON.parse(res.text);
 
-            var expected = [
-              {
-                "id": "bus-default",
-                "method": "GET",
-                "type": "json",
-                "url": "/apis/0.0.0/bus/station/:station/platform/:platform",
-                "version": "0.0.0",
-                "params": {
-                  "station": {
-                    "type": "string"
-                  },
-                  "platform": {}
-                },
-                "query": {}
-              },
-              {
-                "id": "train-default",
-                "method": "GET",
-                "type": "json",
-                "url": "/apis/0.0.0/train/station/:station/platform/:platform",
-                "version": "0.0.0",
-                "params": {
-                  "station": {
-                    "type": "string"
-                  },
-                  "platform": {}
-                },
-                "query": {}
-              }
-            ];
+            var expected = generateDescriptor('v0.0.0', 'v0.0.0');
 
             expect(res).to.be.deep.equal(expected);
             done();
@@ -79,10 +83,14 @@ describe(modulePath, function() {
       })();
     });
 
+  });
+
+  describe('apis process all steps in pipeline correctly', function () {
+
 
     it('returns 200 valid response for an api', function (done) {
       co(function * () {
-        request.get('/apis/0.0.0/train/station/open/platform/1')
+        request.get('/apis/v0.0.0/train/station/open/platform/1')
           .expect(200)
           .end(done)
       })();
@@ -91,7 +99,7 @@ describe(modulePath, function() {
 
     it('returns 500 valid response for an api whose interceptor throws an InternalServerError', function (done) {
       co(function * () {
-        request.get('/apis/0.0.0/train/station/closed/platform/1')
+        request.get('/apis/v0.0.0/train/station/train_v000/platform/1')
           .expect(500)
           .end(done)
       })();
@@ -100,7 +108,7 @@ describe(modulePath, function() {
 
     it('returns 200 valid response for an api whose interceptor modifies the request', function (done) {
       co(function * () {
-        request.get('/apis/0.0.0/train/station/open/platform/10')
+        request.get('/apis/v0.0.0/train/station/open/platform/10')
           .expect(200)
           .end(function (err, res) {
             res = JSON.parse(res.text);
@@ -113,7 +121,7 @@ describe(modulePath, function() {
 
     it('returns 200 valid response for an api whose transformer modifies the response', function (done) {
       co(function * () {
-        request.get('/apis/0.0.0/train/station/open/platform/10')
+        request.get('/apis/v0.0.0/train/station/open/platform/10')
           .expect(200)
           .end(function (err, res) {
             res = JSON.parse(res.text);
@@ -126,7 +134,7 @@ describe(modulePath, function() {
 
     it('returns 400 bad request for a, um, bad request', function (done) {
       co(function * () {
-        request.get('/apis/0.0.0/train/station/open/platform/ten')
+        request.get('/apis/v0.0.0/train/station/open/platform/ten')
           .expect(400)
           .end(done)
       })();
@@ -135,7 +143,7 @@ describe(modulePath, function() {
 
     it('returns 404 for invalid route', function (done) {
       co(function * () {
-        request.get('/apis/0.0.1/non_existent/foo/1')
+        request.get('/apis/v0.0.1/non_existent/foo/1')
           .expect(404)
           .end(done)
       })();
@@ -153,31 +161,7 @@ describe(modulePath, function() {
 
             res = JSON.parse(res.text);
 
-            var expected = [
-              {
-                "id": "bus-default",
-                "method": "GET",
-                "type": "json",
-                "url": "/apis/stable/bus",
-                "version": "0.1.0",
-                "params": {},
-                "query": {}
-              },
-              {
-                "id": "train-default",
-                "method": "GET",
-                "type": "json",
-                "url": "/apis/stable/train/station/:station/platform/:platform",
-                "version": "0.0.0",
-                "params": {
-                  "station": {
-                    "type": "string"
-                  },
-                  "platform": {}
-                },
-                "query": {}
-              }
-            ];
+            var expected = generateDescriptor('v0.1.0', 'stable');
 
             expect(res).to.be.deep.equal(expected);
             done();
@@ -194,22 +178,7 @@ describe(modulePath, function() {
 
             res = JSON.parse(res.text);
 
-            var expected = [
-              {
-                "id": "train-default",
-                "method": "GET",
-                "type": "json",
-                "url": "/apis/beta/train/station/:station/platform/:platform",
-                "version": "1.0.0",
-                "params": {
-                  "station": {
-                    "type": "string"
-                  },
-                  "platform": {}
-                },
-                "query": {}
-              }
-            ];
+            var expected = generateDescriptor('v1.0.0', 'beta');
 
             expect(res).to.be.deep.equal(expected);
             done();
@@ -218,6 +187,95 @@ describe(modulePath, function() {
 
     });
 
+  });
+
+
+  describe('each version of the api uses it\'s own localy scoped codebase', function () {
+
+    describe('v0.0.0 errors', function () {
+
+      it('returns 500 response', function (done) {
+        co(function * () {
+          request.get('/apis/v0.0.0/train/station/train_v000/platform/1')
+            .expect(500)
+            .end(done)
+        })();
+      });
+
+      it('returns 200 response', function (done) {
+        co(function * () {
+          request.get('/apis/v0.1.0/train/station/train_v000/platform/1')
+            .expect(200)
+            .end(done)
+        })();
+      });
+
+      it('returns 200 response', function (done) {
+        co(function * () {
+          request.get('/apis/v1.0.0/train/station/train_v000/platform/1')
+            .expect(200)
+            .end(done)
+        })();
+      });
+
+    });
+
+    describe('v0.1.0 errors', function () {
+
+      it('returns 200 response', function (done) {
+        co(function * () {
+          request.get('/apis/v0.0.0/train/station/train_v010/platform/1')
+            .expect(200)
+            .end(done)
+        })();
+      });
+
+      it('returns 500 response', function (done) {
+        co(function * () {
+          request.get('/apis/v0.1.0/train/station/train_v010/platform/1')
+            .expect(500)
+            .end(done)
+        })();
+      });
+
+      it('returns 200 response', function (done) {
+        co(function * () {
+          request.get('/apis/v1.0.0/train/station/train_v010/platform/1')
+            .expect(200)
+            .end(done)
+        })();
+      });
+
+    });
+
+
+    describe('v1.0.0 errors', function () {
+
+      it('returns 200 response', function (done) {
+        co(function * () {
+          request.get('/apis/v0.0.0/train/station/train_v100/platform/1')
+            .expect(200)
+            .end(done)
+        })();
+      });
+
+      it('returns 200 response', function (done) {
+        co(function * () {
+          request.get('/apis/v0.1.0/train/station/train_v100/platform/1')
+            .expect(200)
+            .end(done)
+        })();
+      });
+
+      it('returns 500 response', function (done) {
+        co(function * () {
+          request.get('/apis/v1.0.0/train/station/train_v100/platform/1')
+            .expect(500)
+            .end(done)
+        })();
+      });
+
+    });
   });
 
 });

@@ -10,11 +10,11 @@ module.exports = [
     type: 'json',
     paths: {
       default: {
-        params: '',
+        params: '/station/:station/platform/:platform',
         request: require('./Request'),
         interceptors: [
           require('./interceptors/stationClosed'),
-          require('./interceptors/platformChange')
+          require('../__common__/interceptors/platformChange')
         ]
       }
     },

@@ -1,6 +1,6 @@
 {
   "name": "su-apiserver",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "koa api initialisation and web server",
   "dependencies": {
     "su-apisession": "git+ssh://git@github.com:super-useful/su-apisession.git",

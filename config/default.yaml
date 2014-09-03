@@ -17,11 +17,8 @@ apis:
   base: "/apis"
   health: "/service/healthcheck"
   releases:
-    train:
-      stable: "0.0.0"
-      beta: "1.0.0"
-    bus:
-      stable: "0.1.0"
+    stable: "v0.1.0"
+    beta: "v1.0.0"
 # made each error an associative array
 # in case we want to add anything more like
 # default messages/data/content-type

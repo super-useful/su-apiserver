@@ -55,15 +55,24 @@ An `app` is defined as an Object that contains the API definitions, database loo
 A typical app structure is given below along with explanations of each item.
 
 ```
-{
-	definitions: {},
-	interceptors: {},
-	queries: {},
-	request: {},
-	transformers: {},
+  __common__/
+    interceptors/
+    transformers/
+	route1/
+	  interceptors/
+	  transformers/
+    index.js
+    query.js
+    Request.js
+  route2/
+    interceptors/
+    transformers/
+    index.js
+    query.js
+    Request.js
 	app.js
 	config.yaml
-}
+
 ```
 
 #### app.js
@@ -74,13 +83,11 @@ A generator that may perform some initialisation.
 
 Applications config.
 
-#### definitions/
+#### route[n]/index.js
 
-Definitions define the flow of control for a particular route in the application. When a route is matched, the request parameters are validated, and the request passes through the individual routes interceptors. The request then flows through a middleware and finally to the route definitions pipeline middlewares. The final middleware in the pipeline is responsible for returning a value for the request.
+A definition of the flow of control for a particular route in the application. When a route is matched, the request parameters are validated, and the request passes through the individual routes interceptors. The request then flows through a middleware and finally to the route definitions pipeline middlewares. The final middleware in the pipeline is responsible for returning a value for the request.
 
-They are defined as a hash of `string` / `Definition` pairs denoting the definition name and definitions themselves.
-
-A `Definition` is an Array of Objects that is defined as the following:
+A `Definition` is an Array of Objects defined as the following:
 
 * `method` String - HTTP method i.e `GET`
 * `type` String - The response type i.e `json`
@@ -94,26 +101,26 @@ Within a `Definition` a `Path` is defined as the following. Note that the actual
 * `request` RequestObject - A definition of the request used for validation.
 * `interceptors` Array<GeneratorFunction> - Ordered set of Koa middleware called first for the request.
 
-#### interceptors/
+#### route[n]/interceptors/
 
-A hash of `string` / `GeneratorFunction`  pairs denoting the interceptor name and the implementing generator.
+`Koa middleware` modify the Request before running any DB queries/API calls etc.
 
-#### queries/
+#### route[n]/transformers/
 
-A hash of `string` / `GeneratorFunction`  pairs denoting the query name and the implementing generator.
+`Koa middleware` transform the response before returning it to the client
 
-#### request/
+#### Request.js
 
-A hash of `string` / `RequestObject` pairs where `RequestObject` is of type `su-define-object`. These denote the request name and the implemented class.
+`su-define-object` A definition of the request used for validation
 
-#### transformers/
+#### query.js
 
-A hash of `string` / `GeneratorFunction`  pairs denoting the transofmer name and the implementing generator.
+`Koa middleware` performs DB queries/ API calls
 
+#### __common__/
+
+`Koa middleware` functionality that is shared between routes lives here
 
 ## TODO
 
- - Move the versioning to be per API
- - Update the config release tag -> version mapping to reflect new version structure
- - Modify transformer steps to become lazy sequence maps, filters etc used by a single koa middleware as opposed to a set of middlewares. Should make things more flexible as we can compose transforms out of single responsibility functions.
  - add extra service checks to healthcheck. eg, redis, ssh tunnel, etc

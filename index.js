@@ -18,6 +18,8 @@ var getRequestDefinition = require('./lib/start/getRequestDefinition');
 
 var routers = require('./lib/utils/routers');
 
+var releases = CONF.apis.releases;
+
 var app = koa();
 
 app.use(Router());
@@ -63,36 +65,36 @@ module.exports = function * (apis) {
       app.use(mod);
     });
 
-    //  start processing each api
-    forEach(apis, function (api, endpointName) {
+    //  start processing each version of the api
+    forEach(apis, function (api, version) {
 
-      //  lets get the releases this api is mapped to
-      var releases = CONF.apis.releases[endpointName];
+      //  init the container for the descriptors
+      apiDescriptor.initialiseVersion(version);
 
-      //  include all version definitions that exist for the api
-      forEach(api, function (apiDef, version) {
+      //  get the release routers bound to this version
+      var releaseRouters = reduce(releases, function (acc, v, release) {
 
-        //  init the container for the descriptors
-        apiDescriptor.initialiseVersion(version);
+        if (v === version) {
+          apiDescriptor.initialiseVersion(release);
+          acc[release] = routers.get(release);
+        }
+        return acc;
 
-        //  get the release routers bound to this version
-        var releaseRouters = reduce(releases, function (acc, v, release) {
+      }, Object.create(null));
 
-          if (v === version) {
-            apiDescriptor.initialiseVersion(release);
-            acc[release] = routers.get(release);
-          }
-          return acc;
+      //  get the router we need to mount for this version
+      var versionRouter = routers.get(version);
 
-        }, Object.create(null));
+      // if there is application functionality specific to this API version, then smoke it up...
+      var apiApp = (function * () {
+        return typeof apiDef.app === 'function' ? yield apiDef.app() : {};
+      })();
 
-        //  get the router we need to mount for this version
-        var versionRouter = routers.get(version);
 
-        // if there is application functionality specific to this API version, then smoke it up...
-        var apiApp = (function * () {
-          return typeof apiDef.app === 'function' ? yield apiDef.app() : {};
-        })();
+      //  include all endpoints that exist for the api
+      forEach(api, function (apiDef, endpointName) {
+
+        if (typeof apiDef.index === 'undefined') return;
 
         //  grab the file where the endpoints are configured and create them
         forEach(apiDef.index, function (endpoint) {

@@ -14,7 +14,7 @@ module.exports = [
         request: require('./Request'),
         interceptors: [
           require('./interceptors/stationClosed'),
-          require('./interceptors/platformChange')
+          require('../__common__/interceptors/platformChange')
         ]
       }
     },
