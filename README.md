@@ -83,7 +83,7 @@ A generator that may perform some initialisation.
 
 Applications config.
 
-#### route[n]/index.js
+#### [route]/index.js
 
 A definition of the flow of control for a particular route in the application. When a route is matched, the request parameters are validated, and the request passes through the individual routes interceptors. The request then flows through a middleware and finally to the route definitions pipeline middlewares. The final middleware in the pipeline is responsible for returning a value for the request.
 
@@ -101,21 +101,21 @@ Within a `Definition` a `Path` is defined as the following. Note that the actual
 * `request` RequestObject - A definition of the request used for validation.
 * `interceptors` Array<GeneratorFunction> - Ordered set of Koa middleware called first for the request.
 
-#### route[n]/interceptors/
-
-`Koa middleware` modify the Request before running any DB queries/API calls etc.
-
-#### route[n]/transformers/
-
-`Koa middleware` transform the response before returning it to the client
-
-#### route[n]/Request.js
+#### [route]/Request.js
 
 `su-define-object` A definition of the request used for validation
 
-#### route[n]/query.js
+#### [route]/query.js
 
 `Koa middleware` performs DB queries/ API calls
+
+#### [route]/interceptors/
+
+`Koa middleware` modify the Request before running any DB queries/API calls etc.
+
+#### [route]/transformers/
+
+`Koa middleware` transform the response before returning it to the client
 
 #### __common__/
 
