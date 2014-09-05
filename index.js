@@ -101,11 +101,19 @@ module.exports = function * (apis) {
 
           var endpointMethod = endpoint.method.toLowerCase();
 
+          var uniquePath;
+
           //  an endpoint can have more than one path
-          forEach(endpoint.paths, function (endpointPath, endpointPathName) {
+          forEach(endpoint.paths, function (endpointPath) {
+
+            //  ensure the api path id exists and is unique to this api
+            if (typeof endpointPath.id === 'undefined' || endpointPath.id === uniquePath) {
+              throw new ReferenceError('Path id must exist and be unique to the API it\'s defined in');
+            }
+            uniquePath = endpointPath.id;
 
             //  build the pipeline and register it with the routers
-            var endpointPipeline = createApiDefinition(endpointName, endpointPathName, endpointPath, endpoint, apiApp);
+            var endpointPipeline = createApiDefinition(endpointName, endpointPath, endpoint, apiApp);
 
             versionRouter[endpointMethod].apply(versionRouter, endpointPipeline);
 
@@ -165,7 +173,7 @@ module.exports = function * (apis) {
     return app.listen(CONF.app.port);
   }
   catch (e) {
-
+    console.log(e)
     process.emit('server:start:error', module, e);
   }
 };

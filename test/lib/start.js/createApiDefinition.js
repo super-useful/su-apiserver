@@ -33,9 +33,9 @@ describe('lib/start/createApiDefinition', function() {
     fakes = sinon.sandbox.create();
 
     name = 'api';
-    pathName = 'pathName';
 
     path = {
+      id: 'pathName',
       params: '/params/:params',
       interceptors: [
         function * () {},
@@ -90,9 +90,9 @@ describe('lib/start/createApiDefinition', function() {
 
   it('should return an array containing values and functions that describe a controller pipeline', function() {
 
-    var definition = createApiDefinition(name, pathName, path, api, apiApp);
+    var definition = createApiDefinition(name, path, api, apiApp);
 
-    expect(definition[0]).to.be.equal(name + '-' + pathName);
+    expect(definition[0]).to.be.equal(name + '-' + path.id);
     expect(definition[1]).to.be.equal('/' + name + path.params);
     expect(definition[2]).to.be.equal(lbRequest);
     expect(definition[3]).to.be.equal(lbController);
@@ -109,7 +109,7 @@ describe('lib/start/createApiDefinition', function() {
     path.request = {};
 
     expect(function () {
-      createApiDefinition(name, pathName, path, api);
+      createApiDefinition(name, path, api);
     }).to.throw(TypeError);
 
   });
@@ -122,7 +122,7 @@ describe('lib/start/createApiDefinition', function() {
     ];
 
     expect(function () {
-      createApiDefinition(name, pathName, path, api);
+      createApiDefinition(name, path, api);
     }).to.throw(TypeError);
 
 
@@ -136,7 +136,7 @@ describe('lib/start/createApiDefinition', function() {
     ];
 
     expect(function () {
-      createApiDefinition(name, pathName, path, api);
+      createApiDefinition(name, path, api);
     }).to.throw(TypeError);
 
   });
@@ -146,7 +146,7 @@ describe('lib/start/createApiDefinition', function() {
     api.query = function () {};
 
     expect(function () {
-      createApiDefinition(name, pathName, path, api);
+      createApiDefinition(name, path, api);
     }).to.throw(TypeError);
 
   });
@@ -160,7 +160,7 @@ describe('lib/start/createApiDefinition', function() {
     ];
 
     expect(function () {
-      createApiDefinition(name, pathName, path, api);
+      createApiDefinition(name, path, api);
     }).to.throw(TypeError);
 
   });
@@ -175,7 +175,7 @@ describe('lib/start/createApiDefinition', function() {
     ];
 
     expect(function () {
-      createApiDefinition(name, pathName, path, api);
+      createApiDefinition(name, path, api);
     }).to.not.throw(Error);
 
   });
@@ -189,7 +189,7 @@ describe('lib/start/createApiDefinition', function() {
     ];
 
     expect(function () {
-      createApiDefinition(name, pathName, path, api);
+      createApiDefinition(name, path, api);
     }).to.throw(Error);
 
   });

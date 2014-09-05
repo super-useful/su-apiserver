@@ -81,18 +81,19 @@ describe('lib/start/apiDescriptor', function() {
 
     it('should push a data structure representing an API on the correct version array', function() {
 
-      apiDescriptor.initialiseVersion(version);
-      apiDescriptor.create(apiName, api, apiUrl, version, version, requestDefinition);
+      apiDescriptor.initialiseVersion(releaseName);
+      apiDescriptor.create(apiName, api, apiUrl, version, releaseName, requestDefinition);
 
-      var v = apiDescriptor.versions[version][0];
+      var v = apiDescriptor.versions[releaseName][0];
 
       expect(v.id).to.be.equal(apiName);
       expect(v.method).to.be.equal(api.method);
       expect(v.type).to.be.equal(api.type);
-      expect(v.url).to.be.equal(CONF.apis.base + '/' + version + apiUrl);
+      expect(v.url).to.be.equal(CONF.apis.base + '/' + releaseName + apiUrl);
       expect(v.params).to.be.equal(requestDefinition.params);
       expect(v.query).to.be.equal(requestDefinition.query);
       expect(v.version).to.be.equal(version);
+      expect(v.release).to.be.equal(releaseName);
     });
 
     it('should throw an error if the supplied version does not exist', function() {

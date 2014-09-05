@@ -24,11 +24,12 @@ chai.use(sinonChai);
 function generateDescriptor (version, release) {
   return [
     {
-      "id": "bus-default",
+      "id": "bus-get",
       "method": "GET",
       "type": "json",
       "url": "/apis/" + release + "/bus/station/:station/platform/:platform",
       "version": version,
+      "release": release,
       "params": {
         "station": {
           "type": "string"
@@ -38,17 +39,28 @@ function generateDescriptor (version, release) {
       "query": {}
     },
     {
-      "id": "train-default",
+      "id": "train-get",
       "method": "GET",
       "type": "json",
       "url": "/apis/" + release + "/train/station/:station/platform/:platform",
       "version": version,
+      "release": release,
       "params": {
         "station": {
           "type": "string"
         },
         "platform": {}
       },
+      "query": {}
+    },
+    {
+      "id": "train-delay",
+      "method": "GET",
+      "type": "json",
+      "url": "/apis/" + release + "/train",
+      "version": version,
+      "release": release,
+      "params": {},
       "query": {}
     }
   ];
@@ -65,7 +77,7 @@ describe(modulePath, function() {
 
   }));
 
-  describe('desciptor file processes correctly', function () {
+  describe('descriptor file processes correctly', function () {
 
     it('returns the api descriptor for a given version', function (done) {
       co(function * () {

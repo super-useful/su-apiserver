@@ -8,8 +8,9 @@ module.exports = [
   {
     method: 'GET',
     type: 'json',
-    paths: {
-      default: {
+    paths: [
+      {
+        id: "get",
         params: '/station/:station/platform/:platform',
         request: require('./Request'),
         interceptors: [
@@ -17,7 +18,7 @@ module.exports = [
           require('../__common__/interceptors/platformChange')
         ]
       }
-    },
+    ],
     query: require('./query'),
     pipeline: [
       require('./transformers/platformChange')
