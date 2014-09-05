@@ -5,6 +5,7 @@ require('su-logger');
 var iter = require('super-iter');
 var forEach = iter.forEach;
 var reduce = iter.reduce;
+var map = iter.map;
 
 var CONF = require('config');
 
@@ -149,7 +150,6 @@ module.exports = function * (apis) {
     forEach(routers.get(), function (router, version) {
 
       app.use(mount(CONF.apis.base + '/' + version, router.middleware()));
-
     });
 
     //  create a new router for the api descriptor and mount it
@@ -159,6 +159,16 @@ module.exports = function * (apis) {
       this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
     });
     app.use(mount(CONF.apis.base, versionRouter.middleware()));
+
+    //  create and mount a base version api
+    var apiRouter = new Router();
+    var apiVersions = map(apiDescriptor.versions, function (desc, version) {
+      return CONF.apis.base + '/' + version;
+    });
+    apiRouter.get('/', function * () {
+      this.body = JSON.stringify(apiVersions, null, 2);
+    });
+    app.use(mount(CONF.apis.base, apiRouter.middleware()));
 
     //  add the health check
     var healthRouter = new Router();

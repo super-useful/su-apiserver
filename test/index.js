@@ -77,6 +77,33 @@ describe(modulePath, function() {
 
   }));
 
+
+  describe('versions file processes correctly', function () {
+
+    it('returns the api versions', function (done) {
+      co(function * () {
+        request.get('/apis')
+          .expect(200)
+          .end(function (err, res) {
+
+            res = JSON.parse(res.text);
+
+            var expected = {
+              "v0.0.0": "/apis/v0.0.0",
+              "v0.1.0": "/apis/v0.1.0",
+              "stable": "/apis/stable",
+              "v1.0.0": "/apis/v1.0.0",
+              "beta": "/apis/beta"
+            };
+
+            expect(res).to.be.deep.equal(expected);
+            done();
+          })
+      })();
+    });
+
+  });
+
   describe('descriptor file processes correctly', function () {
 
     it('returns the api descriptor for a given version', function (done) {
