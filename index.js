@@ -9,6 +9,7 @@ var map = iter.map;
 
 var CONF = require('config');
 
+var co = require('co');
 var koa = require('koa');
 var mount = require('koa-mount');
 var Router = require('koa-router');
@@ -86,62 +87,63 @@ module.exports = function * (apis) {
       //  get the router we need to mount for this version
       var versionRouter = routers.get(version);
 
-      // if there is application functionality specific to this API version, then smoke it up...
-      var apiApp = (function * () {
-        return typeof apiDef.app === 'function' ? yield apiDef.app() : {};
-      })();
+      co(function* () {
+        // if there is application functionality specific to this API version, then smoke it up...
+        var apiApp = yield (function * () {
+          return typeof api.app === 'function' ? yield api.app() : {};
+        })();
 
+        //  include all endpoints that exist for the api
+        forEach(api, function (apiDef, endpointName) {
 
-      //  include all endpoints that exist for the api
-      forEach(api, function (apiDef, endpointName) {
+          if (typeof apiDef.index === 'undefined') return;
 
-        if (typeof apiDef.index === 'undefined') return;
+          //  grab the file where the endpoints are configured and create them
+          forEach(apiDef.index, function (endpoint) {
 
-        //  grab the file where the endpoints are configured and create them
-        forEach(apiDef.index, function (endpoint) {
+            var endpointMethod = endpoint.method.toLowerCase();
 
-          var endpointMethod = endpoint.method.toLowerCase();
+            var uniquePath;
 
-          var uniquePath;
+            //  an endpoint can have more than one path
+            forEach(endpoint.paths, function (endpointPath) {
 
-          //  an endpoint can have more than one path
-          forEach(endpoint.paths, function (endpointPath) {
+              //  ensure the api path id exists and is unique to this api
+              if (typeof endpointPath.id === 'undefined' || endpointPath.id === uniquePath) {
+                throw new ReferenceError('Path id must exist and be unique to the API it\'s defined in');
+              }
+              uniquePath = endpointPath.id;
 
-            //  ensure the api path id exists and is unique to this api
-            if (typeof endpointPath.id === 'undefined' || endpointPath.id === uniquePath) {
-              throw new ReferenceError('Path id must exist and be unique to the API it\'s defined in');
-            }
-            uniquePath = endpointPath.id;
+              //  build the pipeline and register it with the routers
+              var endpointPipeline = createApiDefinition(endpointName, endpointPath, endpoint, apiApp);
 
-            //  build the pipeline and register it with the routers
-            var endpointPipeline = createApiDefinition(endpointName, endpointPath, endpoint, apiApp);
+              versionRouter[endpointMethod].apply(versionRouter, endpointPipeline);
 
-            versionRouter[endpointMethod].apply(versionRouter, endpointPipeline);
+              forEach(releaseRouters, function (router, release) {
+                router[endpointMethod].apply(router, endpointPipeline);
+              });
 
-            forEach(releaseRouters, function (router, release) {
-              router[endpointMethod].apply(router, endpointPipeline);
-            });
+              //  extract the params from the defined route
+              var apiName = endpointPipeline[0];
+              var apiUrl = endpointPipeline[1];
+              var params = versionRouter.route(apiName).params;
 
-            //  extract the params from the defined route
-            var apiName = endpointPipeline[0];
-            var apiUrl = endpointPipeline[1];
-            var params = versionRouter.route(apiName).params;
+              //  get the public facing request params and query
+              var requestDefinition = getRequestDefinition(endpointPath.request, params);
 
-            //  get the public facing request params and query
-            var requestDefinition = getRequestDefinition(endpointPath.request, params);
+              //  create the descriptors
+              apiDescriptor.create(apiName, endpoint, apiUrl, version, version,requestDefinition);
 
-            //  create the descriptors
-            apiDescriptor.create(apiName, endpoint, apiUrl, version, version,requestDefinition);
+              forEach(releaseRouters, function (router, release) {
+                apiDescriptor.create(apiName, endpoint, apiUrl, version, release, requestDefinition);
+              });
 
-            forEach(releaseRouters, function (router, release) {
-              apiDescriptor.create(apiName, endpoint, apiUrl, version, release, requestDefinition);
             });
 
           });
 
         });
-
-      });
+      })();
 
     });
 
