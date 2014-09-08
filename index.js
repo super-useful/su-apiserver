@@ -8,6 +8,7 @@ var reduce = iter.reduce;
 
 var CONF = require('config');
 
+var co = require('co');
 var koa = require('koa');
 var mount = require('koa-mount');
 var Router = require('koa-router');
