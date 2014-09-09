@@ -6,6 +6,7 @@ var iter = require('super-iter');
 var forEach = iter.forEach;
 var reduce = iter.reduce;
 var map = iter.map;
+var copy = require('useful-copy');
 
 var CONF = require('config');
 
@@ -115,7 +116,7 @@ module.exports = function * (apis) {
               uniquePath = endpointPath.id;
 
               //  build the pipeline and register it with the routers
-              var endpointPipeline = createApiDefinition(endpointName, endpointPath, endpoint, apiApp);
+              var endpointPipeline = createApiDefinition(endpointName, endpointPath, endpoint, copy({}, apiApp));
 
               versionRouter[endpointMethod].apply(versionRouter, endpointPipeline);
 

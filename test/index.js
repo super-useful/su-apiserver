@@ -190,6 +190,23 @@ describe(modulePath, function() {
 
   });
 
+  describe('link generation within an api is handled correctly', function () {
+
+    it('can generate a next link correctly', function (done) {
+      co(function * () {
+        request.get('/apis/stable/train/station/link/platform/1')
+          .expect(200)
+          .end(function (err, res) {
+
+            res = JSON.parse(res.text);
+            expect(res.links.next).to.be.equal('/apis/stable/train/station/link/platform/2')
+            done();
+          })
+      })();
+    });
+
+  });
+
   describe('apis mapped by release tag', function () {
 
     it('returns the api descriptor for a stable release', function (done) {

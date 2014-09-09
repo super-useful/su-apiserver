@@ -100,7 +100,6 @@ describe('lib/start/createApiDefinition', function() {
     expect(definition[5]).to.be.equal(path.interceptors[1]);
     expect(definition[6]).to.be.equal(api.interceptors[0]);
     expect(definition[7]).to.be.equal(api.interceptors[1]);
-//    expect(definition[8]).to.be.equal(lbController);
   });
 
 
@@ -175,7 +174,7 @@ describe('lib/start/createApiDefinition', function() {
     ];
 
     expect(function () {
-      createApiDefinition(name, path, api);
+      createApiDefinition(name, path, api, apiApp);
     }).to.not.throw(Error);
 
   });

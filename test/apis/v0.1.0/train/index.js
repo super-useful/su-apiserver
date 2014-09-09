@@ -30,7 +30,8 @@ module.exports = [
     ],
     query: require('./query'),
     pipeline: [
-      require('./transformers/platformChange')
+      require('./transformers/platformChange'),
+      require('./transformers/links')
     ]
   }
 ];
