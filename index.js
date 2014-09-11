@@ -1,6 +1,6 @@
 "use strict";
 
-require('su-logger');
+require('su-logger')();
 
 var iter = require('super-iter');
 var forEach = iter.forEach;
@@ -55,6 +55,17 @@ app.on('error', function (e, ctx) {
   ctx.length = Buffer.byteLength(res);
   ctx.res.end(res);
 
+});
+
+// custom events to log
+process.on('server:start:error', function () {
+    process.emit.apply(process, ['app:error'].concat(Array.prototype.slice.call(arguments)));
+});
+process.on('request:error', function () {
+    process.emit.apply(process, ['app:warn'].concat(Array.prototype.slice.call(arguments)));
+});
+process.on('request:success', function () {
+    process.emit.apply(process, ['app:log'].concat(Array.prototype.slice.call(arguments)));
 });
 
 
