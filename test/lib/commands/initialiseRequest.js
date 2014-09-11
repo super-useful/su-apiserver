@@ -133,7 +133,7 @@ describe(modulePath, function() {
 
       yield underTest.call(ctxSuccess, Request, next);
 
-      expect(ctxSuccess.r).to.be.an.instanceof(Request);
+      expect(ctxSuccess.su.req).to.be.an.instanceof(Request);
 
     })(done);
 

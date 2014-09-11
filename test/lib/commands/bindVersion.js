@@ -81,7 +81,7 @@ describe(modulePath, function() {
 
       yield underTest.call(ctxSuccess, appApi, next);
 
-      expect(ctxSuccess.v.version).to.be.equal('0.0.0');
+      expect(ctxSuccess.su.version.version).to.be.equal('0.0.0');
 
     })(done);
 
@@ -95,7 +95,7 @@ describe(modulePath, function() {
       yield underTest.call(ctxSuccess, appApi, next);
 
       expect(routers.get).to.have.been.calledWith('0.0.0');
-      expect(ctxSuccess.v.router).to.be.equal(10);
+      expect(ctxSuccess.su.version.router).to.be.equal(10);
 
     })(done);
 
