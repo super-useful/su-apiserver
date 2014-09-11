@@ -34,7 +34,8 @@ describe(modulePath, function() {
     next = function * () {};
 
     ctxSuccess = {
-      mountPath: '/apis/0.0.0'
+      mountPath: '/apis/0.0.0',
+      su: {}
     };
 
     ctxError = {};

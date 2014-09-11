@@ -40,7 +40,8 @@ describe(modulePath, function() {
         string: 'string',
         number: 10
       },
-      header: {'x-csrf-token': '1234'}
+      header: {'x-csrf-token': '1234'},
+      su: {}
     };
 
     ctxError = {
@@ -51,7 +52,8 @@ describe(modulePath, function() {
         string: 10,
         number: 'string'
       },
-      header: {'x-csrf-token': '1234'}
+      header: {'x-csrf-token': '1234'},
+      su: {}
     };
 
     Request = define('Request', {
