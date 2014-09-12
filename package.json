@@ -17,7 +17,7 @@
     "koa-router": "x",
     "hat": "x",
     "super-is": "x",
-    "super-iter": "x",
+    "super-iter": "git+ssh://git@github.com:ibrokethat/iter.git#v0.1.0",
     "super-func": "x",
     "super-base": "x",
     "JSONStream": "x",
