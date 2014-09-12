@@ -25,12 +25,12 @@ describe(modulePath, function() {
     done();
   });
 
-  it('should return null if no router name matches the passed ID', function (done) {
+  it('should return undefined if no router name matches the passed ID', function (done) {
     expect(underTest({
       routes: [{
         name: 'foo'
       }]
-    }, 'bar')).to.be.null;
+    }, 'bar')).to.be.undefined;
 
     done();
   });
