@@ -1,9 +1,9 @@
 
 module.exports = function * links (next) {
 
-  if (this.r.params.station === 'link') {
+  if (this.su.req.params.station === 'link') {
 
-    this.links.next = this.v.url({station: 'link', platform: 2});
+    this.links.next = this.su.api.resolveUrl({station: 'link', platform: 2});
   }
 
   yield next;

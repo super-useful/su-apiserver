@@ -6,8 +6,8 @@ module.exports = function * query (next) {
 
   return {
     onTime: true,
-    platform: this.r.params.platform,
-    station: this.r.params.station
+    platform: this.su.req.params.platform,
+    station: this.su.req.params.station
   };
 
 }

@@ -94,12 +94,12 @@ describe('lib/start/createApiDefinition', function() {
 
     expect(definition[0]).to.be.equal(name + '-' + path.id);
     expect(definition[1]).to.be.equal('/' + name + path.params);
-    expect(definition[2]).to.be.equal(lbRequest);
-    expect(definition[3]).to.be.equal(lbController);
-    expect(definition[4]).to.be.equal(path.interceptors[0]);
-    expect(definition[5]).to.be.equal(path.interceptors[1]);
-    expect(definition[6]).to.be.equal(api.interceptors[0]);
-    expect(definition[7]).to.be.equal(api.interceptors[1]);
+    expect(definition[3]).to.be.equal(lbRequest);
+    expect(definition[4]).to.be.equal(lbController);
+    expect(definition[6]).to.be.equal(path.interceptors[0]);
+    expect(definition[7]).to.be.equal(path.interceptors[1]);
+    expect(definition[8]).to.be.equal(api.interceptors[0]);
+    expect(definition[9]).to.be.equal(api.interceptors[1]);
   });
 
 

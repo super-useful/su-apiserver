@@ -18,9 +18,9 @@ var next;
 var ctxSuccess;
 var ctxError;
 
-var modulePath = 'lib/commands/bindVersion';
+var modulePath = 'lib/commands/bindAPI';
+var apiApp;
 var routers;
-var appApi;
 
 chai.use(sinonChai);
 
@@ -30,7 +30,7 @@ describe(modulePath, function() {
 
     underTest = rewire(path.resolve(modulePath));
     fakes = sinon.sandbox.create();
-    appApi = {};
+    apiApp = {apiName: 'foo'};
     next = function * () {};
 
     ctxSuccess = {
@@ -41,7 +41,12 @@ describe(modulePath, function() {
     ctxError = {};
 
     routers = underTest.__get__('routers');
-    fakes.stub(routers, 'get').returns(10)
+
+    fakes.stub(routers, 'get').returns({
+      routes: [{
+        name: 'foo'
+      }]
+    });
 
   });
 
@@ -56,46 +61,23 @@ describe(modulePath, function() {
   });
 
 
-  it('should throw an InternalServerError if there is a problem', function (done) {
+  it('should attach the current API version to the ctx', function (done) {
 
     co(function * () {
 
-      var e;
+      yield underTest.call(ctxSuccess, apiApp, next);
 
-      try {
-        yield underTest.call(ctxError, appApi, next);
-      }
-      catch (err) {
-        e = err;
-      }
-
-      expect(e).to.be.instanceof(InternalServerError);
-
-    })(done);
-
-  });
-
-  it('should attach the version to the ctx', function (done) {
-
-    co(function * () {
-
-      yield underTest.call(ctxSuccess, appApi, next);
-
-      expect(ctxSuccess.su.version.version).to.be.equal('0.0.0');
-
-    })(done);
-
-  });
-
-
-  it('should attach the correct router to the ctx', function (done) {
-
-    co(function * () {
-
-      yield underTest.call(ctxSuccess, appApi, next);
-
-      expect(routers.get).to.have.been.calledWith('0.0.0');
-      expect(ctxSuccess.su.version.router).to.be.equal(10);
+      expect(ctxSuccess.su.api.currentEndpoint).to.deep.equal({
+        name: 'foo'
+      });
+      expect(ctxSuccess.su.api.router).to.deep.equal({
+        routes: [{
+          name: 'foo'
+        }]
+      });
+      expect(ctxSuccess.su.api.getEndpointById).to.be.a.function;
+      expect(ctxSuccess.su.api.callEndpoint).to.be.a.function;
+      expect(ctxSuccess.su.api.resolveEndpointUrl).to.be.a.function;
 
     })(done);
 
