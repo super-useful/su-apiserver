@@ -6,7 +6,7 @@ var co = require('co');
 var chai = require('chai');
 var expect = chai.expect;
 
-var next = function * () {};0
+var next = function * () {};
 
 var modulePath = 'lib/commands/initialiseContext';
 
