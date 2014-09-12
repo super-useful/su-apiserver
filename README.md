@@ -123,11 +123,5 @@ Within a `Definition` a `Path` is defined as the following. Note that the actual
 
 ## TODO
 
- - unit tests for:
-  - commands/bindAPI
-  - commands/initialiseContext
-  - utils/callEndpoint
-  - utils/getEndpointById
-  - utils/resolveEndpointUrl
  - move validators out into su-validate-type
  - add extra service checks to healthcheck. eg, redis, ssh tunnel, etc — maybe new module su-health???
