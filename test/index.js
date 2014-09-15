@@ -49,9 +49,15 @@ function generateDescriptor (version, release) {
         "station": {
           "type": "string"
         },
-        "platform": {}
+        "platform": {
+          "type": "number"
+        }
       },
-      "query": {}
+      "query": {
+        "steam": {
+          "type": "string"
+        }
+      }
     },
     {
       "id": "train-delay",
@@ -61,7 +67,11 @@ function generateDescriptor (version, release) {
       "version": version,
       "release": release,
       "params": {},
-      "query": {}
+      "query": {
+        "steam": {
+          "type": "string"
+        }
+      }
     }
   ];
 }
@@ -160,11 +170,23 @@ describe(modulePath, function() {
 
     it('returns 200 valid response for an api whose transformer modifies the response', function (done) {
       co(function * () {
-        request.get('/apis/v0.0.0/train/station/open/platform/10')
+        request.get('/apis/v0.0.0/train/station/open/platform/3')
           .expect(200)
           .end(function (err, res) {
             res = JSON.parse(res.text);
             expect(res.data.message).to.be.equal('platformChange');
+            done();
+          })
+      })();
+    });
+
+    it('returns 200 valid response with the query params passed through', function (done) {
+      co(function * () {
+        request.get('/apis/v0.0.0/train/station/open/platform/10?steam=please')
+          .expect(200)
+          .end(function (err, res) {
+            res = JSON.parse(res.text);
+            expect(res.query.steam).to.be.equal('please');
             done();
           })
       })();

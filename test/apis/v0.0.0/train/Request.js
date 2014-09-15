@@ -12,7 +12,18 @@ module.exports = define('Request', {
           },
           platform: {
             enumerable: true,
+            type: 'number',
             set: stringToNumber
+          }
+        }
+      ]
+    }),
+    query: define('Query', {
+      properties: [
+        {
+          steam: {
+            enumerable: true,
+            type: 'string'
           }
         }
       ]
