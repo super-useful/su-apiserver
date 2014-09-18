@@ -34,7 +34,8 @@
     "moment-timezone": "x",
     "useful-value": "x",
     "pm2": "x",
-    "redis": "x"
+    "redis": "x",
+    "path-to-regexp": "x"
   },
   "devDependencies": {
     "assert": "*",
