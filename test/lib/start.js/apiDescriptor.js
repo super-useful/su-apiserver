@@ -16,6 +16,7 @@ var version;
 var releaseName;
 var apiName;
 var apiUrl;
+var apiApp;
 
 chai.use(sinonChai);
 
@@ -42,6 +43,7 @@ describe('lib/start/apiDescriptor', function() {
       query: 20
     }
 
+    apiApp = {};
   });
 
   afterEach(function() {
@@ -82,7 +84,7 @@ describe('lib/start/apiDescriptor', function() {
     it('should push a data structure representing an API on the correct version array', function() {
 
       apiDescriptor.initialiseVersion(releaseName);
-      apiDescriptor.create(apiName, api, apiUrl, version, releaseName, requestDefinition);
+      apiDescriptor.create(apiName, api, apiUrl, version, releaseName, requestDefinition, apiApp);
 
       var v = apiDescriptor.versions[releaseName][0];
 

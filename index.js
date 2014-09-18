@@ -145,10 +145,10 @@ module.exports = function * (apis) {
               var requestDefinition = getRequestDefinition(endpointPath.request, params);
 
               //  create the descriptors
-              apiDescriptor.create(apiName, endpoint, apiUrl, version, version,requestDefinition);
+              apiDescriptor.create(apiName, endpoint, apiUrl, version, version,requestDefinition, apiApp);
 
               forEach(releaseRouters, function (router, release) {
-                apiDescriptor.create(apiName, endpoint, apiUrl, version, release, requestDefinition);
+                apiDescriptor.create(apiName, endpoint, apiUrl, version, release, requestDefinition, apiApp);
               });
 
             });
@@ -175,6 +175,8 @@ module.exports = function * (apis) {
     });
     app.use(mount(CONF.apis.base, versionRouter.middleware()));
 
+
+
     //  create and mount a base version api
     var apiRouter = new Router();
     var apiVersions = map(apiDescriptor.versions, function (desc, version) {
@@ -184,6 +186,8 @@ module.exports = function * (apis) {
       this.body = JSON.stringify(apiVersions, null, 2);
     });
     app.use(mount(CONF.apis.base, apiRouter.middleware()));
+
+
 
     //  add the health check
     var healthRouter = new Router();

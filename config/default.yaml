@@ -1,5 +1,5 @@
 app:
-  port: 3000
+  port: 5050
   session:
     host: "localhost"
     port: 6379
