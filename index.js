@@ -145,10 +145,10 @@ module.exports = function * (apis) {
               var requestDefinition = getRequestDefinition(endpointPath.request, params);
 
               //  create the descriptors
-              apiDescriptor.create(apiName, endpoint, apiUrl, version, version,requestDefinition, apiApp);
+              apiDescriptor.create(apiName, endpoint, apiUrl, version, version,requestDefinition);
 
               forEach(releaseRouters, function (router, release) {
-                apiDescriptor.create(apiName, endpoint, apiUrl, version, release, requestDefinition, apiApp);
+                apiDescriptor.create(apiName, endpoint, apiUrl, version, release, requestDefinition);
               });
 
             });
