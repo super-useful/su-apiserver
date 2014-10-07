@@ -32,7 +32,7 @@ app.use(Router());
 //  we bind error handler to the app
 app.on('error', function (e, ctx) {
 
-  process.emit('request:error', e.status, ctx.request.originalUrl, e);
+  process.emit('request:error', e.status, ctx.request.method, ctx.request.originalUrl, e);
 
   var status = e.status || '500';
   var res = {
