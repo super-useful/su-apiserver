@@ -5,6 +5,7 @@
   "dependencies": {
     "su-apisession": "git+ssh://git@github.com:super-useful/su-apisession.git",
     "su-define-object": "git+ssh://git@github.com:super-useful/su-define-object.git",
+    "su-healthcheck": "git+ssh://git@github.com:super-useful/su-healthcheck.git",
     "su-logger": "git+ssh://git@github.com:super-useful/su-logger.git",
     "co": "x",
     "co-defer": "x",

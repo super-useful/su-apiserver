@@ -2,6 +2,7 @@
 
 require('su-logger')();
 
+var HC = require('su-healthcheck');
 var iter = require('super-iter');
 var forEach = iter.forEach;
 var reduce = iter.reduce;
@@ -101,6 +102,17 @@ module.exports = function * (apis) {
       var versionRouter = routers.get(version);
 
       co(function* () {
+        // if there is application functionality specific to this API version, then smoke it up...
+        var apiHealth = yield (function * () {
+          var health = typeof api.healthcheck === 'function' ? yield api.healthcheck() : {};
+
+          console.log(health);
+
+          return health;
+        })();
+
+        HC.verify(apiHealth);
+
         // if there is application functionality specific to this API version, then smoke it up...
         var apiApp = yield (function * () {
           return typeof api.app === 'function' ? yield api.app() : {};
