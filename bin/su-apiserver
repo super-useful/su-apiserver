@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+
+var StringDecoder = require('string_decoder').StringDecoder;
+var spawn = require('child_process').spawn;
+var fs = require('fs');
+var path = require('path');
+
+var argv = process.argv;
+var command = argv[2];
+var exec_file = path.join(__dirname, command + '.js');
+var program;
+
+if (fs.existsSync(exec_file)){
+
+  var decoder = new StringDecoder('utf8');
+
+  var args = ["--harmony", exec_file].concat(argv.slice(3));
+
+  var child = spawn(process.execPath, args, {
+    cwd: __dirname
+  });
+
+  child.stdout.on("data", function( data ) {
+
+    console.log(decoder.write(data));
+  });
+
+  child.stderr.on("data", function( data ) {
+
+    console.log(decoder.write(data));
+  });
+
+  // process.stdout.write( 'executing command: ' + command + '\n' );
+
+  // program = require(exec_file);
+
+  // if (typeof program === 'function') {
+
+  //   program.apply(global, argv.slice( 3 ));
+  // }
+}
