@@ -43,7 +43,7 @@ describe(modulePath, function() {
 
     expect(function () {
       underTest.xcsrf.set(1);
-    }).to.throw(TypeError, /Invalid XCSRF Token/);
+    }).to.throw(Error, /Invalid Session/);
 
   });
 
