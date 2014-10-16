@@ -4,3 +4,4 @@ node_modules
 tmp
 config/runtime.json
 *.pid
+docs/*.md

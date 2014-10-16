@@ -13,6 +13,7 @@ log:
     INFO: 1
     LOG: 1
     WARN: 1
+  path: "logs"
 apis:
   base: "/apis"
   health: "/service/healthcheck"

@@ -1,12 +1,13 @@
 {
   "name": "su-apiserver",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "koa api initialisation and web server",
   "dependencies": {
     "su-apisession": "git+ssh://git@github.com:super-useful/su-apisession.git",
     "su-define-object": "git+ssh://git@github.com:super-useful/su-define-object.git",
     "su-healthcheck": "git+ssh://git@github.com:super-useful/su-healthcheck.git",
     "su-logger": "git+ssh://git@github.com:super-useful/su-logger.git",
+    "cluster-master": "0.2.x",
     "co": "x",
     "co-defer": "x",
     "co-redis": "x",
@@ -33,7 +34,6 @@
     "useful-copy": "x",
     "moment-timezone": "x",
     "useful-value": "x",
-    "pm2": "x",
     "redis": "x",
     "path-to-regexp": "x"
   },
