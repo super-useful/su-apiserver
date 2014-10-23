@@ -42,7 +42,8 @@ app.on('error', function (e, ctx) {
         success: false
       },
       data: {
-        message : e.toString()
+        message : e.toString(),
+        messages: e.messages ? e.messages(false) : []
       }
     };
 
