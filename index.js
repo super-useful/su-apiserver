@@ -77,6 +77,7 @@ module.exports = function * (apis) {
   try {
 
     var koaModules = Array.prototype.slice.call(arguments, 1);
+    var healthies = {};
 
     forEach(koaModules, function(mod) {
       app.use(mod);
@@ -105,7 +106,12 @@ module.exports = function * (apis) {
       co(function* () {
         // if there is application functionality specific to this API version, then smoke it up...
         var apiHealth = yield (function * () {
-          var health = typeof api.healthcheck === 'function' ? yield api.healthcheck() : {};
+          var health = {};
+
+          if (typeof api.healthcheck === 'function') {
+            healthies[version] = api.healthcheck;
+            health = yield api.healthcheck();
+          }
 
           console.log(health);
 
@@ -186,6 +192,7 @@ module.exports = function * (apis) {
     versionRouter.get('/:version', function * () {
       this.body = JSON.stringify(apiDescriptor.versions[this.params.version], null, 2);
     });
+
     app.use(mount(CONF.apis.base, versionRouter.middleware()));
 
 
@@ -206,7 +213,16 @@ module.exports = function * (apis) {
     var healthRouter = new Router();
 
     healthRouter.get('/', function * () {
-      this.body = JSON.stringify(apiDescriptor.versions.stable, null, 2);
+      this.body = yield map(healthies, function* (healtcheck) {
+        return yield healtcheck();
+      });
+      try {
+        HC.verify(this.body);
+      }
+      catch (e) {
+        this.status = 500;
+      }
+      //this.body = JSON.stringify(apiDescriptor.versions.stable, null, 2);
     });
 
     app.use(mount(CONF.apis.health, healthRouter.middleware()));
@@ -215,7 +231,7 @@ module.exports = function * (apis) {
     return app.listen(CONF.app.port);
   }
   catch (e) {
-    console.log(e)
+    console.log(e);
     process.emit('server:start:error', module, e);
   }
 };
