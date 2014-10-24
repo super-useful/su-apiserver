@@ -30,9 +30,8 @@
     "yaml": "x",
     "js-yaml": "x",
     "require-all": "x",
-    "moment": "x",
     "useful-copy": "x",
-    "moment-timezone": "x",
+    "moment-timezone": "0.2.x",
     "useful-value": "x",
     "redis": "x",
     "path-to-regexp": "x"
