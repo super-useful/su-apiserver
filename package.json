@@ -3,7 +3,7 @@
   "version": "0.2.1",
   "description": "koa api initialisation and web server",
   "dependencies": {
-    "su-apisession": "git+ssh://git@github.com:super-useful/su-apisession.git",
+    "su-apisession": "git+ssh://git@github.com:super-useful/su-apisession.git#v0.1.0",
     "su-define-object": "git+ssh://git@github.com:super-useful/su-define-object.git",
     "su-healthcheck": "git+ssh://git@github.com:super-useful/su-healthcheck.git",
     "su-logger": "git+ssh://git@github.com:super-useful/su-logger.git",
