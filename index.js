@@ -118,7 +118,12 @@ module.exports = function * (apis) {
           return health;
         })();
 
-        HC.verify(apiHealth);
+        try {
+          HC.verify(apiHealth);
+        }
+        catch (e) {
+          process.emit('app:error', module, e);
+        }
 
         // if there is application functionality specific to this API version, then smoke it up...
         var apiApp = yield (function * () {
