@@ -4,7 +4,7 @@ module.exports = function cluster_fudged(worker) {
   cluster({
     exec : worker,
     env : process.env,
-    args : ['--harmony', '--harmony_typeof'],
+    args : ['--harmony'],
     signals : false,
     size : require('os').cpus().length
   });
