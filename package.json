@@ -1,6 +1,6 @@
 {
   "name": "su-apiserver",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "koa api initialisation and web server",
   "dependencies": {
     "su-apisession": "git+ssh://git@github.com:super-useful/su-apisession.git#v0.1.0",
@@ -13,6 +13,7 @@
     "co-redis": "x",
     "co-sleep": "x",
     "koa": "x",
+    "koa-better-body": "1.0.x",
     "koa-body-parser": "x",
     "koa-compose": "x",
     "koa-mount": "x",
@@ -26,9 +27,8 @@
     "node-uuid": "x",
     "event-stream": "x",
     "through": "x",
-    "config": "x",
-    "yaml": "x",
-    "js-yaml": "x",
+    "config": "1.7.x",
+    "js-yaml": "3.2.x",
     "require-all": "x",
     "useful-copy": "x",
     "moment-timezone": "0.2.x",
