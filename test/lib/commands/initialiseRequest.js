@@ -90,7 +90,7 @@ describe(modulePath, function() {
 
   it('should throw a RequestError if new Request() errors', function (done) {
 
-    co(function * () {
+    co.wrap(function * () {
 
       var e;
 
@@ -103,14 +103,15 @@ describe(modulePath, function() {
 
       expect(e).to.be.instanceof(RequestError);
 
-    })(done);
+      done()
+    })();
 
   });
 
 
   it('should register all the new Request() errors with the RequestError', function (done) {
 
-    co(function * () {
+    co.wrap(function * () {
 
       var e;
 
@@ -123,19 +124,21 @@ describe(modulePath, function() {
 
       expect(e.errors.length).to.be.equal(2);
 
-    })(done);
+      done();
+    })();
 
   });
 
   it('should attach the Request to the ctx', function (done) {
 
-    co(function * () {
+    co.wrap(function * () {
 
       yield underTest.call(ctxSuccess, Request, next);
 
       expect(ctxSuccess.su.req).to.be.an.instanceof(Request);
 
-    })(done);
+      done();
+    })();
 
   });
 

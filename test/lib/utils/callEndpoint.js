@@ -56,12 +56,13 @@ describe(modulePath, function() {
   });
 
   it('should call the passed endpoint with a new koa context', function (done) {
-    co(function* () {
+    co.wrap(function* () {
 
       expect(yield underTest(router, 'foo', context, {params: {bar: 'foo'}})).to.deep.equal({
           bar: 'foo',
           foo: 'bar'
       });
-    })(done);
+      done();
+    })();
   });
 });

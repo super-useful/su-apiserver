@@ -58,7 +58,7 @@ describe(modulePath, function() {
 
   it('should throw an InternalServerError if there is a problem', function (done) {
 
-    co(function * () {
+    co.wrap(function * () {
 
       var e;
 
@@ -71,33 +71,36 @@ describe(modulePath, function() {
 
       expect(e).to.be.instanceof(InternalServerError);
 
-    })(done);
+      done();
+    })();
 
   });
 
   it('should attach the version to the ctx', function (done) {
 
-    co(function * () {
+    co.wrap(function * () {
 
       yield underTest.call(ctxSuccess, appApi, next);
 
       expect(ctxSuccess.su.version.version).to.be.equal('0.0.0');
 
-    })(done);
+      done();
+    })();
 
   });
 
 
   it('should attach the correct router to the ctx', function (done) {
 
-    co(function * () {
+    co.wrap(function * () {
 
       yield underTest.call(ctxSuccess, appApi, next);
 
       expect(routers.get).to.have.been.calledWith('0.0.0');
       expect(ctxSuccess.su.version.router).to.be.equal(10);
 
-    })(done);
+      done();
+    })();
 
   });
 

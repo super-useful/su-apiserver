@@ -79,7 +79,7 @@ function generateDescriptor (version, release) {
 describe(modulePath, function() {
 
 
-  before(co(function * () {
+  before(co.wrap(function * () {
 
     app = require(path.resolve(modulePath));
     var underTest = yield app(versions);
@@ -91,7 +91,7 @@ describe(modulePath, function() {
   describe('versions file processes correctly', function () {
 
     it('returns the api versions', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis')
           .expect(200)
           .end(function (err, res) {
@@ -117,7 +117,7 @@ describe(modulePath, function() {
   describe('descriptor file processes correctly', function () {
 
     it('returns the api descriptor for a given version', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/v0.0.0')
           .expect(200)
           .end(function (err, res) {
@@ -138,7 +138,7 @@ describe(modulePath, function() {
 
 
     it('returns 200 valid response for an api', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/v0.0.0/train/station/open/platform/1')
           .expect(200)
           .end(done)
@@ -147,7 +147,7 @@ describe(modulePath, function() {
 
 
     it('returns 500 valid response for an api whose interceptor throws an InternalServerError', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/v0.0.0/train/station/train_v000/platform/1')
           .expect(500)
           .end(done)
@@ -156,7 +156,7 @@ describe(modulePath, function() {
 
 
     it('returns 200 valid response for an api whose interceptor modifies the request', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/v0.0.0/train/station/open/platform/10')
           .expect(200)
           .end(function (err, res) {
@@ -169,7 +169,7 @@ describe(modulePath, function() {
 
 
     it('returns 200 valid response for an api whose transformer modifies the response', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/v0.0.0/train/station/open/platform/3')
           .expect(200)
           .end(function (err, res) {
@@ -181,7 +181,7 @@ describe(modulePath, function() {
     });
 
     it('returns 200 valid response with the query params passed through', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/v0.0.0/train/station/open/platform/10?steam=please')
           .expect(200)
           .end(function (err, res) {
@@ -194,7 +194,7 @@ describe(modulePath, function() {
 
 
     it('returns 400 bad request for a, um, bad request', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/v0.0.0/train/station/open/platform/ten')
           .expect(400)
           .end(done)
@@ -203,7 +203,7 @@ describe(modulePath, function() {
 
 
     it('returns 404 for invalid route', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/v0.0.1/non_existent/foo/1')
           .expect(404)
           .end(done)
@@ -215,7 +215,7 @@ describe(modulePath, function() {
   describe('link generation within an api is handled correctly', function () {
 
     it('can generate a next link correctly', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/stable/train/station/link/platform/1')
           .expect(200)
           .end(function (err, res) {
@@ -232,7 +232,7 @@ describe(modulePath, function() {
   describe('apis mapped by release tag', function () {
 
     it('returns the api descriptor for a stable release', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/stable')
           .expect(200)
           .end(function (err, res) {
@@ -249,7 +249,7 @@ describe(modulePath, function() {
     });
 
     it('returns the api descriptor for a beta release', function (done) {
-      co(function * () {
+      co.wrap(function * () {
         request.get('/apis/beta')
           .expect(200)
           .end(function (err, res) {
@@ -273,7 +273,7 @@ describe(modulePath, function() {
     describe('v0.0.0 errors', function () {
 
       it('returns 500 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v0.0.0/train/station/train_v000/platform/1')
             .expect(500)
             .end(done)
@@ -281,7 +281,7 @@ describe(modulePath, function() {
       });
 
       it('returns 200 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v0.1.0/train/station/train_v000/platform/1')
             .expect(200)
             .end(done)
@@ -289,7 +289,7 @@ describe(modulePath, function() {
       });
 
       it('returns 200 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v1.0.0/train/station/train_v000/platform/1')
             .expect(200)
             .end(done)
@@ -301,7 +301,7 @@ describe(modulePath, function() {
     describe('v0.1.0 errors', function () {
 
       it('returns 200 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v0.0.0/train/station/train_v010/platform/1')
             .expect(200)
             .end(done)
@@ -309,7 +309,7 @@ describe(modulePath, function() {
       });
 
       it('returns 500 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v0.1.0/train/station/train_v010/platform/1')
             .expect(500)
             .end(done)
@@ -317,7 +317,7 @@ describe(modulePath, function() {
       });
 
       it('returns 200 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v1.0.0/train/station/train_v010/platform/1')
             .expect(200)
             .end(done)
@@ -330,7 +330,7 @@ describe(modulePath, function() {
     describe('v1.0.0 errors', function () {
 
       it('returns 200 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v0.0.0/train/station/train_v100/platform/1')
             .expect(200)
             .end(done)
@@ -338,7 +338,7 @@ describe(modulePath, function() {
       });
 
       it('returns 200 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v0.1.0/train/station/train_v100/platform/1')
             .expect(200)
             .end(done)
@@ -346,7 +346,7 @@ describe(modulePath, function() {
       });
 
       it('returns 500 response', function (done) {
-        co(function * () {
+        co.wrap(function * () {
           request.get('/apis/v1.0.0/train/station/train_v100/platform/1')
             .expect(500)
             .end(done)

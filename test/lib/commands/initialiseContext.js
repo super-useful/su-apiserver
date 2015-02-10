@@ -15,7 +15,7 @@ var underTest = require(path.resolve(modulePath));
 describe(modulePath, function() {
   it('should add the goddamn `su` context to the goddamn koa context', function (done) {
 
-    co(function * () {
+    co.wrap(function * () {
       var ctx = {
         request: {
           body: {}
@@ -32,7 +32,8 @@ describe(modulePath, function() {
 
       expect(ctx.su).to.deep.equal(Object.create(null));
 
-    })(done);
+      done();
+    })();
 
   });
 

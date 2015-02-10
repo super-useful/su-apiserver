@@ -63,7 +63,7 @@ describe(modulePath, function() {
 
   it('should attach the current API version to the ctx', function (done) {
 
-    co(function * () {
+    co.wrap(function * () {
 
       yield underTest.call(ctxSuccess, apiApp, next);
 
@@ -79,7 +79,8 @@ describe(modulePath, function() {
       expect(ctxSuccess.su.api.callEndpoint).to.be.a.function;
       expect(ctxSuccess.su.api.resolveEndpointUrl).to.be.a.function;
 
-    })(done);
+      done();
+    })();
 
   });
 
