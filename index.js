@@ -13,6 +13,7 @@ var CONF = require('config');
 
 var co = require('co');
 var koa = require('koa');
+var latency = require('koa-latency-headers');
 var mount = require('koa-mount');
 var Router = require('koa-router');
 
@@ -26,6 +27,8 @@ var releases = CONF.apis.releases;
 
 
 var app = koa();
+
+app.use(latency());
 
 app.use(Router());
 
@@ -103,7 +106,7 @@ module.exports = function * (apis) {
       //  get the router we need to mount for this version
       var versionRouter = routers.get(version);
 
-      co(function* () {
+      co.wrap(function* () {
         // if there is application functionality specific to this API version, then smoke it up...
         var apiHealth = yield (function * () {
           var health = {};
