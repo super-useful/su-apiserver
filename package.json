@@ -8,7 +8,7 @@
     "su-healthcheck": "git+ssh://git@github.com:super-useful/su-healthcheck.git",
     "su-logger": "git+ssh://git@github.com:super-useful/su-logger.git",
     "cluster-master": "0.2.x",
-    "co": "x",
+    "co": "4.3.x",
     "co-defer": "x",
     "co-redis": "x",
     "co-sleep": "x",
